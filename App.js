@@ -4,7 +4,7 @@ import * as React from "react";
 import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import AuthGate from "./components/AuthGate";
+import AuthGate from "./component/AuthGate";
 
 // pages
 import HomeScreen from "./pages/HomeScreen";
@@ -14,17 +14,15 @@ import Gallery from "./pages/Gallery";
 import MyAlbum from "./pages/MyAlbum";
 import MinwhaTrans from "./pages/MinwhaTrans";
 
-// ✅ AuthGate (로그인 보호용)
-import AuthGate from "./components/AuthGate";
-
 const Stack = createNativeStackNavigator();
 
 // ✅ 보호 스크린을 감싸는 HOC
-const withAuthGate = (ScreenComp) => (props) => (
-  <AuthGate>
-    <ScreenComp {...props} />
-  </AuthGate>
-);
+const withAuthGate = (ScreenComp) => (props) =>
+  (
+    <AuthGate>
+      <ScreenComp {...props} />
+    </AuthGate>
+  );
 
 // ✅ 보호해야 하는 화면만 래핑
 const GalleryProtected = withAuthGate(Gallery);
