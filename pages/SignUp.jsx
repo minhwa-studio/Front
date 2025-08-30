@@ -11,7 +11,7 @@ import {
   Alert,
 } from "react-native";
 import { styles } from "./SignUp.styles";
-
+import axios from "axios";
 const { width, height } = Dimensions.get("window");
 
 const SignUp = ({ navigation }) => {
@@ -104,18 +104,59 @@ const SignUp = ({ navigation }) => {
     return Object.keys(newErrors).length === 0;
   };
 
+  
+
   // 회원가입 제출
-  const handleSignUp = () => {
-    if (validateForm()) {
-      // TODO: API 호출 로직 추가
+const handleSignUp = async () => {
+  if (!validateForm()) return;
+
+  try {
+    const response = await axios.post(
+      "http://localhost:8000/user/signup",
+      {
+        email: formData.email,
+        password: formData.password,
+        name: formData.name,
+        phone: formData.phone,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (response.status === 200 || response.status === 201) {
       Alert.alert("회원가입 완료", "민화 사진관에 오신 것을 환영합니다!", [
         {
           text: "확인",
-          onPress: () => navigation.navigate("HomeScreen"),
+          onPress: () => {
+            // navigation 확인
+            if (navigation && typeof navigation.navigate === "function") {
+              navigation.navigate("HomeScreen");
+            } else {
+              console.warn("navigation 오류: 이동 실패");
+            }
+          },
         },
       ]);
     }
-  };
+  } catch (error) {
+    const message =
+      error?.response?.data?.detail || "회원가입에 실패했습니다.";
+
+    if (message === "Email already registered") {
+      setErrors((prev) => ({
+        ...prev,
+        email: "이미 등록된 이메일입니다.",
+      }));
+    } else {
+      Alert.alert("에러", message);
+    }
+  }
+};
+
+
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
