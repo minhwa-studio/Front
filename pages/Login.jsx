@@ -11,10 +11,12 @@ import {
   Alert,
 } from "react-native";
 import { styles } from "./Login.styles";
+import { useAuth } from "../AuthContext"; // AuthContext 훅 임포트
 
 const { width, height } = Dimensions.get("window");
 
 const Login = ({ navigation }) => {
+  const { login } = useAuth(); // 로그인 함수 가져오기
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -68,12 +70,17 @@ const Login = ({ navigation }) => {
   // 로그인 제출
   const handleLogin = () => {
     if (validateForm()) {
-      // TODO: API 호출 로직 추가
-      // 임시 로그인 성공 처리
+      // TODO: 실제 API 호출 로직으로 교체
+      // API에서 사용자 이름을 받아서 login 함수에 전달해야 합니다.
+      const userNameFromEmail = formData.email.split('@')[0];
+      
       Alert.alert("로그인 성공", "민화 사진관에 오신 것을 환영합니다!", [
         {
           text: "확인",
-          onPress: () => navigation.navigate("HomeScreen"),
+          onPress: () => {
+            login(userNameFromEmail); // 로그인 성공 시 사용자 이름으로 로그인 상태 업데이트
+            navigation.navigate("HomeScreen");
+          },
         },
       ]);
     }

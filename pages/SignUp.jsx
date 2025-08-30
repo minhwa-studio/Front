@@ -11,10 +11,12 @@ import {
   Alert,
 } from "react-native";
 import { styles } from "./SignUp.styles";
+import { useAuth } from "../AuthContext"; // AuthContext 훅 임포트
 
 const { width, height } = Dimensions.get("window");
 
 const SignUp = ({ navigation }) => {
+  const { login } = useAuth(); // 로그인 함수 가져오기
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -111,7 +113,10 @@ const SignUp = ({ navigation }) => {
       Alert.alert("회원가입 완료", "민화 사진관에 오신 것을 환영합니다!", [
         {
           text: "확인",
-          onPress: () => navigation.navigate("HomeScreen"),
+          onPress: () => {
+            login(formData.name); // 회원가입 성공 시 사용자 이름으로 로그인 상태 업데이트
+            navigation.navigate("HomeScreen");
+          },
         },
       ]);
     }
