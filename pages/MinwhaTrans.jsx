@@ -12,10 +12,12 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { styles } from "./MinwhaTrans.styles";
-
+import { useAuth } from "../AuthContext";
+import axios from "axios";
 const { width, height } = Dimensions.get("window");
 
 const MinwhaTrans = ({ navigation }) => {
+  const { userId } = useAuth();
   const [uploadedImage, setUploadedImage] = useState(null);
   const [convertedImages, setConvertedImages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -47,26 +49,39 @@ const MinwhaTrans = ({ navigation }) => {
   };
 
   // 민화 변환 시작
-  const handleConvert = () => {
-    if (!uploadedImage) {
-      Alert.alert("알림", "먼저 이미지를 업로드해주세요.");
-      return;
-    }
+  const handleConvert = async () => {
+  if (!uploadedImage) {
+    Alert.alert("알림", "먼저 이미지를 업로드해주세요.");
+    return;
+  }
 
-    setIsLoading(true);
+  setIsLoading(true);
 
-    // 서버 전송 시뮬레이션 (3초 후 완료)
-    setTimeout(() => {
-      setIsLoading(false);
+  try {
+    const res = await axios.post(`http://localhost:8000/predict`, {
+      user_id: userId,
+    });
 
-      // 변환된 이미지 생성 (임시로 다른 이미지 사용)
-      const convertedImage = require("../public/호랑이와 까치.jpg");
+    console.log("✅ 변환 요청 성공:", res.data);
 
-      // 미리보기 팝업 표시
-      setPreviewImage(convertedImage);
-      setPreviewModalVisible(true);
-    }, 3000);
-  };
+    // 예시: 썸네일 이미지 넣기 (실제 이미지 URL 있으면 교체)
+    const dummyImage = require("../public/호랑이와 까치.jpg");
+
+    const previewData = {
+      id: res.data.image_id,
+      image: dummyImage,
+      timestamp: new Date(res.data.created_at).toLocaleString(),
+    };
+
+    setPreviewImage(previewData.image);
+    setPreviewModalVisible(true);
+  } catch (err) {
+    console.error("❌ 변환 실패:", err.response?.data || err.message);
+    Alert.alert("실패", "이미지 변환 중 오류가 발생했습니다.");
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   // 미리보기 팝업 닫기
   const handleClosePreview = () => {
