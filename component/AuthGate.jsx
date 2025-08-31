@@ -1,19 +1,19 @@
 import React from "react";
-import { View, Text, Button } from "react-native";
 import { useAuth } from "../AuthContext";
+import { ActivityIndicator, View } from "react-native";
 
 const AuthGate = ({ children }) => {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, loading } = useAuth();
 
-  if (!isLoggedIn) {
+  if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>로그인이 필요합니다.</Text>
+        <ActivityIndicator size="large" />
       </View>
     );
   }
 
-  return children;
+  return isLoggedIn ? children : null;
 };
 
 export default AuthGate;
