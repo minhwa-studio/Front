@@ -10,11 +10,13 @@ import {
   Platform,
   Alert,
 } from "react-native";
+import axios from "axios";
 import { styles } from "./Login.styles";
-
+import { useAuth } from "../AuthContext"; 
 const { width, height } = Dimensions.get("window");
 
 const Login = ({ navigation }) => {
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -45,39 +47,47 @@ const Login = ({ navigation }) => {
   };
 
   // 유효성 검사
-  const validateForm = () => {
-    const newErrors = {};
+const validateForm = () => {
+  const errors = {};
 
-    // 이메일 검사
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!formData.email.trim()) {
-      newErrors.email = "이메일을 입력해주세요.";
-    } else if (!emailRegex.test(formData.email)) {
-      newErrors.email = "올바른 이메일 형식을 입력해주세요.";
-    }
+  if (!formData.email?.trim()) {
+    errors.email = "이메일을 입력해주세요.";
+  }
+  if (!formData.password?.trim()) {
+    errors.password = "비밀번호를 입력해주세요.";
+  }
 
-    // 비밀번호 검사
-    if (!formData.password) {
-      newErrors.password = "비밀번호를 입력해주세요.";
-    }
+  setErrors(errors);
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  const isValid = Object.keys(errors).length === 0;
+  console.log("⚠️ 유효성 검사 에러:", errors);
+  return isValid;
+};
 
-  // 로그인 제출
-  const handleLogin = () => {
-    if (validateForm()) {
-      // TODO: API 호출 로직 추가
-      // 임시 로그인 성공 처리
-      Alert.alert("로그인 성공", "민화 사진관에 오신 것을 환영합니다!", [
-        {
-          text: "확인",
-          onPress: () => navigation.navigate("HomeScreen"),
-        },
-      ]);
-    }
-  };
+
+
+
+  const handleLogin = async () => {
+  if (!validateForm()) return;
+
+  try {
+    console.log("🚀 axios 요청 전");
+
+    const response = await axios.post(`http://localhost:8000/user/login`, formData);
+    console.log("✅ 로그인 성공:", response.data);
+
+    const { access_token, user } = response.data; // ✅ 구조 맞게 수정
+    login(user); // ✅ user 그대로 넘기기 (name이 아닌 user 전체)
+
+    navigation.replace("HomeScreen"); // ✅ 성공 시 이동
+  } catch (err) {
+    console.error("❌ 로그인 실패:", err);
+    Alert.alert("로그인 실패", "이메일 또는 비밀번호가 올바르지 않습니다.");
+  }
+};
+
+
+
 
   // 비밀번호 찾기
   const handleForgotPassword = () => {

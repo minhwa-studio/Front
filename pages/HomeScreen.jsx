@@ -11,12 +11,13 @@ import {
   Platform,
 } from "react-native";
 import { styles } from "./HomeScreen.styles";
-
+import { useAuth } from "../AuthContext";
 const { width, height } = Dimensions.get("window");
 
 // Status Bar 숨김 처리
 
 const HomeScreen = ({ navigation }) => {
+  const { isLoggedIn, userName, logout } = useAuth();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentGalleryIndex, setCurrentGalleryIndex] = useState(0);
   const [language, setLanguage] = useState("KOR"); // 언어 상태 추가
@@ -166,21 +167,33 @@ const HomeScreen = ({ navigation }) => {
               <Text style={styles.languageText}>{language}</Text>
             </TouchableOpacity>
 
-            {/* 사용자 메뉴 */}
-            <View style={styles.userMenu}>
-              <TouchableOpacity
-                style={styles.userButton}
-                onPress={() => navigation.navigate("SignUp")}
-              >
-                <Text style={styles.userButtonText}>회원가입</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.userButton}
-                onPress={() => navigation.navigate("Login")}
-              >
-                <Text style={styles.userButtonText}>로그인</Text>
-              </TouchableOpacity>
-            </View>
+            {/* 사용자 메뉴 (로그인 여부에 따라 조건부 렌더링) */}
+            {isLoggedIn ? (
+              <View style={styles.userMenu}>
+                <Text style={styles.userButtonText}>민화 사진관에 오신걸 환영합니다, {userName}님!</Text>
+                <TouchableOpacity
+                  style={styles.userButton}
+                  onPress={logout}
+                >
+                  <Text style={styles.userButtonText}>로그아웃</Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <View style={styles.userMenu}>
+                <TouchableOpacity
+                  style={styles.userButton}
+                  onPress={() => navigation.navigate("SignUp")}
+                >
+                  <Text style={styles.userButtonText}>회원가입</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.userButton}
+                  onPress={() => navigation.navigate("Login")}
+                >
+                  <Text style={styles.userButtonText}>로그인</Text>
+                </TouchableOpacity>
+              </View>
+            )}
           </View>
         </View>
 

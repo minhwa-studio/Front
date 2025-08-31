@@ -11,10 +11,12 @@ import {
   Alert,
 } from "react-native";
 import { styles } from "./SignUp.styles";
+import { useAuth } from "../AuthContext"; 
 import axios from "axios";
 const { width, height } = Dimensions.get("window");
 
 const SignUp = ({ navigation }) => {
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -133,6 +135,7 @@ const handleSignUp = async () => {
           onPress: () => {
             // navigation 확인
             if (navigation && typeof navigation.navigate === "function") {
+              login(formData.name);
               navigation.navigate("HomeScreen");
             } else {
               console.warn("navigation 오류: 이동 실패");
