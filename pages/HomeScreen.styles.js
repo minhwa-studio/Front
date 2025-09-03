@@ -24,7 +24,7 @@ export const styles = StyleSheet.create({
   // 전체 컨테이너
   container: {
     flex: 1,
-    backgroundColor: colors.white,
+    backgroundColor: "transparent",
   },
 
   // ===== HEADER STYLES =====
@@ -32,7 +32,12 @@ export const styles = StyleSheet.create({
     width: "100%",
     paddingTop: Platform.OS === "web" ? 20 : 40,
     paddingBottom: 20,
-    backgroundColor: colors.black,
+    backgroundColor: "transparent",
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 20,
   },
   headerTop: {
     flexDirection: "row",
@@ -103,19 +108,46 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: width * 0.04,
-    backgroundColor: colors.white,
+    backgroundColor: "transparent",
+    position: "relative",
+    overflow: "hidden",
+  },
+  backgroundImageContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    width: "100%",
+    height: "100%",
+  },
+  backgroundImage: {
+    width: "100%",
+    height: "100%",
+  },
+  backgroundOverlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
   },
   mainContent: {
     alignItems: "center",
     maxWidth: width * 0.8,
+    zIndex: 10,
   },
   mainTitle: {
-    fontSize: Math.min(width * 0.045, 36),
-    color: colors.black,
+    fontSize: Math.min(width * 0.06, 48), // 0.045 → 0.06, 36 → 48로 증가
+    color: colors.white,
     textAlign: "center",
     marginBottom: height * 0.04,
     fontFamily: "ChusaLoveBold",
-    lineHeight: Math.min(width * 0.055, 44),
+    lineHeight: Math.min(width * 0.07, 56), // 0.055 → 0.07, 44 → 56로 증가
+    textShadowColor: colors.black,
+    textShadowOffset: { width: 2, height: 2 },
+    textShadowRadius: 4,
   },
   subTitleContainer: {
     flexDirection: "row",
@@ -125,18 +157,21 @@ export const styles = StyleSheet.create({
   },
   subTitle: {
     fontSize: Math.min(width * 0.035, 28),
-    color: colors.darkGray,
+    color: colors.white,
     fontFamily: "ChusaLoveBold",
+    textShadowColor: colors.black,
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
   minwhaButton: {
     borderWidth: 2,
-    borderColor: colors.primary,
+    borderColor: colors.white,
     borderRadius: 25,
     paddingHorizontal: width * 0.03,
     paddingVertical: height * 0.01,
     marginHorizontal: width * 0.01,
-    backgroundColor: colors.white,
-    shadowColor: colors.primary,
+    backgroundColor: "transparent",
+    shadowColor: colors.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
@@ -144,16 +179,21 @@ export const styles = StyleSheet.create({
   },
   minwhaButtonText: {
     fontSize: Math.min(width * 0.035, 28),
-    color: colors.primary,
+    color: colors.white,
     fontFamily: "ChusaLoveBold",
     fontWeight: "bold",
   },
 
   // ===== FOOTER STYLES =====
   footer: {
-    backgroundColor: colors.black,
+    backgroundColor: "transparent",
     paddingVertical: 30,
     paddingHorizontal: width * 0.04,
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: 20,
   },
   footerContent: {
     flexDirection: "row",
@@ -168,7 +208,7 @@ export const styles = StyleSheet.create({
   },
   footerCopyright: {
     fontSize: Math.min(width * 0.015, 12),
-    color: colors.lightGray,
+    color: colors.white,
     fontFamily: "ChusaLoveBold",
     lineHeight: 18,
   },

@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
   TouchableOpacity,
   Dimensions,
   Linking,
+  Animated,
+  ImageBackground,
 } from "react-native";
 import { styles } from "./HomeScreen.styles";
 import { useAuth } from "../AuthContext";
@@ -14,11 +16,70 @@ const { width, height } = Dimensions.get("window");
 const HomeScreen = ({ navigation }) => {
   const { isLoggedIn, userName, logout } = useAuth();
   const [language, setLanguage] = useState("KOR");
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // 애니메이션 값들
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+  const fadeAnim = useRef(new Animated.Value(1)).current;
+
+  // monthly_images 폴더의 이미지들
+  const backgroundImages = [
+    require("../public/monthly_images/이태숙 - 봉황도.jpg"),
+    require("../public/monthly_images/길혜은-책가도.jpg"),
+    require("../public/monthly_images/강향미-호피장막도.jpg"),
+    require("../public/monthly_images/강경미 - 백호도.jpg"),
+    require("../public/monthly_images/군학장생도.jpg"),
+    require("../public/monthly_images/고독.jpg"),
+    require("../public/monthly_images/空谷跫音(공곡공음).jpg"),
+    require("../public/monthly_images/모란도(37).jpg"),
+    require("../public/monthly_images/화접초충도(4).jpg"),
+    require("../public/monthly_images/풍속도(5).jpg"),
+    require("../public/monthly_images/2018 연화도.jpg"),
+    require("../public/monthly_images/금강산만물초승경도(1).jpg"),
+  ];
 
   // GitHub 링크 열기
   const openGitHub = () => {
     Linking.openURL("https://github.com/minhwa-studio");
   };
+
+  // 배경 이미지 슬라이드 애니메이션
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // 페이드 아웃
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 1000, // 1초 동안 페이드아웃
+        useNativeDriver: true,
+      }).start(() => {
+        // 다음 이미지로 변경
+        setCurrentImageIndex((prev) => (prev + 1) % backgroundImages.length);
+
+        // 스케일 리셋
+        scaleAnim.setValue(1);
+
+        // 페이드 인
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 500,
+          useNativeDriver: true,
+        }).start();
+      });
+    }, 4000); // 4초마다 변경 (3초 확대 + 1초 페이드아웃)
+
+    return () => clearInterval(interval);
+  }, [backgroundImages.length, fadeAnim, scaleAnim]);
+
+  // 확대 애니메이션
+  useEffect(() => {
+    const scaleAnimation = Animated.timing(scaleAnim, {
+      toValue: 1.1,
+      duration: 2000,
+      useNativeDriver: true,
+    });
+
+    scaleAnimation.start();
+  }, [currentImageIndex, scaleAnim]);
 
   return (
     <View style={styles.container}>
@@ -88,6 +149,26 @@ const HomeScreen = ({ navigation }) => {
 
       {/* ===== MAIN SECTION ===== */}
       <View style={styles.main}>
+        {/* 배경 이미지 */}
+        <Animated.View
+          style={[
+            styles.backgroundImageContainer,
+            {
+              opacity: fadeAnim,
+              transform: [{ scale: scaleAnim }],
+            },
+          ]}
+        >
+          <ImageBackground
+            source={backgroundImages[currentImageIndex]}
+            style={styles.backgroundImage}
+            resizeMode="cover"
+          />
+          {/* 배경 어둡게 처리 */}
+          <View style={styles.backgroundOverlay} />
+        </Animated.View>
+
+        {/* 메인 콘텐츠 */}
         <View style={styles.mainContent}>
           <Text style={styles.mainTitle}>
             민화, 전통을 담아 AI로 다시 숨쉬다
@@ -115,7 +196,7 @@ const HomeScreen = ({ navigation }) => {
           </View>
           <View style={styles.footerRight}>
             <TouchableOpacity onPress={openGitHub}>
-              <Text style={styles.footerGitHub}>GitHub</Text>
+              <Text style={styles.footerGitHub}>GitHub minhwa-studio</Text>
             </TouchableOpacity>
           </View>
         </View>
