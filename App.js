@@ -5,6 +5,7 @@ import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
+
 // ✅ AuthContext 추가
 import { AuthProvider } from "./AuthContext";
 
@@ -12,6 +13,7 @@ import { AuthProvider } from "./AuthContext";
 import AuthGate from "./component/AuthGate";
 
 // pages
+
 import HomeScreen from "./pages/HomeScreen";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
@@ -40,6 +42,7 @@ export default function App() {
         <StatusBar style="light" hidden={true} />
         <Stack.Navigator
           initialRouteName="HomeScreen"
+
           screenOptions={{ headerShown: false }}
         >
           {/* 공개 라우트 */}
@@ -51,6 +54,7 @@ export default function App() {
           <Stack.Screen name="Gallery" component={GalleryProtected} />
           <Stack.Screen name="MyAlbum" component={MyAlbumProtected} />
           <Stack.Screen name="MinwhaTrans" component={MinwhaTransProtected} />
+
         </Stack.Navigator>
       </NavigationContainer>
     </AuthProvider>

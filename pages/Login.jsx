@@ -17,6 +17,7 @@ const { width, height } = Dimensions.get("window");
 
 const Login = ({ navigation }) => {
   const { login } = useAuth();
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",

@@ -12,12 +12,14 @@ import {
 } from "react-native";
 import { styles } from "./HomeScreen.styles";
 import { useAuth } from "../AuthContext";
+
 const { width, height } = Dimensions.get("window");
 
 // Status Bar 숨김 처리
 
 const HomeScreen = ({ navigation }) => {
   const { isLoggedIn, userName, logout } = useAuth();
+
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentGalleryIndex, setCurrentGalleryIndex] = useState(0);
   const [language, setLanguage] = useState("KOR"); // 언어 상태 추가
