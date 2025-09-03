@@ -11,14 +11,15 @@ import {
   Platform,
 } from "react-native";
 import { styles } from "./HomeScreen.styles";
-import { useAuth } from "../AuthContext"; // AuthContext 훅 임포트
+import { useAuth } from "../AuthContext";
 
 const { width, height } = Dimensions.get("window");
 
 // Status Bar 숨김 처리
 
 const HomeScreen = ({ navigation }) => {
-  const { isLoggedIn, userName, logout } = useAuth(); // 로그인 상태와 함수 가져오기
+  const { isLoggedIn, userName, logout } = useAuth();
+
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentGalleryIndex, setCurrentGalleryIndex] = useState(0);
   const [language, setLanguage] = useState("KOR"); // 언어 상태 추가
