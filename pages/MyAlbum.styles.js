@@ -58,16 +58,12 @@ export const styles = StyleSheet.create({
   backButtonText: {
     fontSize: Math.min(width * 0.04, 24),
     color: colors.white,
-    fontWeight: "bold",
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Bold" : "sans-serif-bold",
+    fontFamily: "ChusaLoveBold",
   },
   headerTitle: {
     fontSize: Math.min(width * 0.035, 22),
-    fontWeight: "bold",
     color: colors.traditionalBlack,
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Bold" : "sans-serif-bold",
+    fontFamily: "ChusaLoveBold",
   },
   viewModeButton: {
     width: Math.min(width * 0.08, 40),
@@ -108,9 +104,7 @@ export const styles = StyleSheet.create({
   transformButtonText: {
     fontSize: Math.min(width * 0.02, 14),
     color: colors.white,
-    fontWeight: "600",
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Medium" : "sans-serif-medium",
+    fontFamily: "ChusaLoveBold",
   },
 
   // 카테고리 필터
@@ -139,9 +133,7 @@ export const styles = StyleSheet.create({
   categoryButtonText: {
     fontSize: Math.min(width * 0.025, 16),
     color: colors.darkGray,
-    fontWeight: "600",
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Medium" : "sans-serif-medium",
+    fontFamily: "ChusaLoveBold",
   },
   categoryButtonTextActive: {
     color: colors.white,
@@ -159,9 +151,7 @@ export const styles = StyleSheet.create({
   addCategoryButtonText: {
     fontSize: Math.min(width * 0.04, 24),
     color: colors.primary,
-    fontWeight: "bold",
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Bold" : "sans-serif-bold",
+    fontFamily: "ChusaLoveBold",
   },
 
   // 빈 상태
@@ -177,19 +167,16 @@ export const styles = StyleSheet.create({
   },
   emptyStateTitle: {
     fontSize: Math.min(width * 0.04, 24),
-    fontWeight: "bold",
     color: colors.traditionalBlack,
     marginBottom: height * 0.01,
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Bold" : "sans-serif-bold",
+    fontFamily: "ChusaLoveBold",
   },
   emptyStateText: {
     fontSize: Math.min(width * 0.025, 16),
     color: colors.darkGray,
     textAlign: "center",
     marginBottom: height * 0.04,
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Regular" : "sans-serif",
+    fontFamily: "ChusaLoveBold",
   },
   emptyStateButton: {
     backgroundColor: colors.primary,
@@ -205,9 +192,7 @@ export const styles = StyleSheet.create({
   emptyStateButtonText: {
     fontSize: Math.min(width * 0.025, 16),
     color: colors.white,
-    fontWeight: "600",
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Medium" : "sans-serif-medium",
+    fontFamily: "ChusaLoveBold",
   },
 
   // 이미지 목록
@@ -248,16 +233,13 @@ export const styles = StyleSheet.create({
   gridImageTitle: {
     fontSize: Math.min(width * 0.02, 14),
     color: colors.white,
-    fontWeight: "600",
     marginBottom: height * 0.005,
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Medium" : "sans-serif-medium",
+    fontFamily: "ChusaLoveBold",
   },
   gridImageTimestamp: {
     fontSize: Math.min(width * 0.018, 12),
     color: colors.lightGray,
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Regular" : "sans-serif",
+    fontFamily: "ChusaLoveBold",
   },
 
   // 리스트 아이템
@@ -287,24 +269,20 @@ export const styles = StyleSheet.create({
   },
   listItemTitle: {
     fontSize: Math.min(width * 0.025, 16),
-    fontWeight: "600",
     color: colors.traditionalBlack,
     marginBottom: height * 0.005,
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Medium" : "sans-serif-medium",
+    fontFamily: "ChusaLoveBold",
   },
   listItemCategory: {
     fontSize: Math.min(width * 0.02, 14),
     color: colors.primary,
     marginBottom: height * 0.005,
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Regular" : "sans-serif",
+    fontFamily: "ChusaLoveBold",
   },
   listItemTimestamp: {
     fontSize: Math.min(width * 0.018, 12),
     color: colors.darkGray,
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Regular" : "sans-serif",
+    fontFamily: "ChusaLoveBold",
   },
   listItemActions: {
     justifyContent: "center",
@@ -321,9 +299,7 @@ export const styles = StyleSheet.create({
   listActionButtonText: {
     fontSize: Math.min(width * 0.018, 12),
     color: colors.white,
-    fontWeight: "600",
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Medium" : "sans-serif-medium",
+    fontFamily: "ChusaLoveBold",
   },
   deleteButton: {
     backgroundColor: colors.error,
@@ -363,11 +339,9 @@ export const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: Math.min(width * 0.035, 20),
-    fontWeight: "bold",
     color: colors.traditionalBlack,
     flex: 1,
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Bold" : "sans-serif-bold",
+    fontFamily: "ChusaLoveBold",
   },
   closeButton: {
     width: Math.min(width * 0.06, 32),
@@ -380,9 +354,7 @@ export const styles = StyleSheet.create({
   closeButtonText: {
     fontSize: Math.min(width * 0.04, 20),
     color: colors.darkGray,
-    fontWeight: "bold",
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Bold" : "sans-serif-bold",
+    fontFamily: "ChusaLoveBold",
   },
   modalImageContainer: {
     padding: width * 0.04,
@@ -407,8 +379,7 @@ export const styles = StyleSheet.create({
     fontSize: Math.min(width * 0.025, 16),
     color: colors.primary,
     fontWeight: "600",
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Medium" : "sans-serif-medium",
+    fontFamily: "ChusaLoveBold",
   },
   editCategoryButton: {
     backgroundColor: colors.secondary,
@@ -420,14 +391,12 @@ export const styles = StyleSheet.create({
     fontSize: Math.min(width * 0.018, 12),
     color: colors.primary,
     fontWeight: "600",
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Medium" : "sans-serif-medium",
+    fontFamily: "ChusaLoveBold",
   },
   modalTimestamp: {
     fontSize: Math.min(width * 0.02, 14),
     color: colors.darkGray,
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Regular" : "sans-serif",
+    fontFamily: "ChusaLoveBold",
   },
   modalActions: {
     flexDirection: "row",
@@ -444,10 +413,8 @@ export const styles = StyleSheet.create({
   },
   modalActionButtonText: {
     fontSize: Math.min(width * 0.025, 16),
-    fontWeight: "600",
     color: colors.white,
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Medium" : "sans-serif-medium",
+    fontFamily: "ChusaLoveBold",
   },
 
   // 카테고리 모달 스타일
@@ -468,11 +435,9 @@ export const styles = StyleSheet.create({
   },
   categoryModalLabel: {
     fontSize: Math.min(width * 0.025, 16),
-    fontWeight: "600",
     color: colors.traditionalBlack,
     marginBottom: height * 0.01,
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Medium" : "sans-serif-medium",
+    fontFamily: "ChusaLoveBold",
   },
   categoryModalInput: {
     borderWidth: 1,
@@ -482,8 +447,7 @@ export const styles = StyleSheet.create({
     paddingVertical: height * 0.015,
     fontSize: Math.min(width * 0.025, 16),
     color: colors.traditionalBlack,
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Regular" : "sans-serif",
+    fontFamily: "ChusaLoveBold",
   },
   cancelButton: {
     backgroundColor: colors.lightGray,
@@ -497,8 +461,7 @@ export const styles = StyleSheet.create({
     fontSize: Math.min(width * 0.02, 14),
     color: colors.darkGray,
     marginBottom: height * 0.02,
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Regular" : "sans-serif",
+    fontFamily: "ChusaLoveBold",
   },
   categorySelectionList: {
     maxHeight: height * 0.3,
@@ -519,9 +482,7 @@ export const styles = StyleSheet.create({
   categorySelectionItemText: {
     fontSize: Math.min(width * 0.025, 16),
     color: colors.traditionalBlack,
-    fontWeight: "600",
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Medium" : "sans-serif-medium",
+    fontFamily: "ChusaLoveBold",
   },
   categorySelectionItemTextActive: {
     color: colors.white,

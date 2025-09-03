@@ -72,11 +72,9 @@ export const styles = StyleSheet.create({
   },
   logo: {
     fontSize: Math.min(width * 0.035, 28),
-    fontWeight: "bold",
     color: colors.paperWhite,
     marginRight: width * 0.05,
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Bold" : "sans-serif-bold",
+    fontFamily: "ChusaLoveBold",
     textShadowColor: colors.inkBlack,
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 2,
@@ -92,9 +90,7 @@ export const styles = StyleSheet.create({
   navText: {
     color: colors.paperWhite,
     fontSize: Math.min(width * 0.02, 16),
-    fontWeight: "500",
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Medium" : "sans-serif-medium",
+    fontFamily: "ChusaLoveBold",
     textShadowColor: colors.inkBlack,
     textShadowOffset: { width: 0.5, height: 0.5 },
     textShadowRadius: 1,
@@ -110,9 +106,7 @@ export const styles = StyleSheet.create({
   languageText: {
     color: colors.paperWhite,
     fontSize: Math.min(width * 0.015, 12),
-    fontWeight: "600",
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Bold" : "sans-serif-bold",
+    fontFamily: "ChusaLoveBold",
   },
   userMenu: {
     flexDirection: "row",
@@ -126,9 +120,7 @@ export const styles = StyleSheet.create({
   userButtonText: {
     color: colors.paperWhite,
     fontSize: Math.min(width * 0.018, 14),
-    fontWeight: "500",
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Medium" : "sans-serif-medium",
+    fontFamily: "ChusaLoveBold",
     textShadowColor: colors.inkBlack,
     textShadowOffset: { width: 0.5, height: 0.5 },
     textShadowRadius: 1,
@@ -149,9 +141,7 @@ export const styles = StyleSheet.create({
   slideButtonText: {
     color: colors.paperWhite,
     fontSize: Math.min(width * 0.03, 24),
-    fontWeight: "bold",
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Bold" : "sans-serif-bold",
+    fontFamily: "ChusaLoveBold",
   },
 
   // ===== MAIN STYLES =====
@@ -162,12 +152,10 @@ export const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: Math.min(width * 0.032, 26),
-    fontWeight: "bold",
     color: colors.traditionalBlack,
     textAlign: "center",
     marginBottom: height * 0.04,
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Bold" : "sans-serif-bold",
+    fontFamily: "ChusaLoveBold",
     textShadowColor: colors.traditionalGray,
     textShadowOffset: { width: 0.5, height: 0.5 },
     textShadowRadius: 1,
@@ -218,22 +206,18 @@ export const styles = StyleSheet.create({
   },
   mainItemOverlayText: {
     fontSize: Math.min(width * 0.018, 14),
-    fontWeight: "600",
     color: "#FFFFFF",
     textAlign: "center",
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Bold" : "sans-serif-bold",
+    fontFamily: "ChusaLoveBold",
     textShadowColor: colors.inkBlack,
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 2,
   },
   mainItemText: {
     fontSize: 12,
-    fontWeight: "600",
     color: colors.traditionalBlack,
     textAlign: "center",
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Medium" : "sans-serif-medium",
+    fontFamily: "ChusaLoveBold",
   },
   mainTextContainer: {
     flexDirection: "row",
@@ -292,18 +276,15 @@ export const styles = StyleSheet.create({
   },
   galleryCardTitle: {
     fontSize: "18px",
-    fontWeight: "bold",
     color: colors.paperWhite,
     marginBottom: "5px",
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Bold" : "sans-serif-bold",
+    fontFamily: "ChusaLoveBold",
   },
   galleryCardSubtitle: {
     fontSize: "14px",
     color: colors.hanjiLight,
     marginBottom: "15px",
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Regular" : "sans-serif",
+    fontFamily: "ChusaLoveBold",
   },
   galleryCardInfo: {
     gap: "5px",
@@ -311,15 +292,12 @@ export const styles = StyleSheet.create({
   galleryCardLocation: {
     fontSize: "12px",
     color: colors.paperWhite,
-    fontWeight: "500",
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Medium" : "sans-serif-medium",
+    fontFamily: "ChusaLoveBold",
   },
   galleryCardDate: {
     fontSize: "11px",
     color: colors.hanjiLight,
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Regular" : "sans-serif",
+    fontFamily: "ChusaLoveBold",
   },
   gallerySlideButton: {
     position: "absolute",
@@ -337,9 +315,7 @@ export const styles = StyleSheet.create({
   gallerySlideButtonText: {
     color: colors.paperWhite,
     fontSize: "24px",
-    fontWeight: "bold",
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Bold" : "sans-serif-bold",
+    fontFamily: "ChusaLoveBold",
   },
 
   // ===== FOOTER STYLES =====
@@ -359,15 +335,16 @@ export const styles = StyleSheet.create({
   },
   footerTitle: {
     fontSize: 18,
-    fontWeight: "bold",
     color: colors.white,
     marginBottom: 15,
+    fontFamily: "ChusaLoveBold",
   },
   footerText: {
     fontSize: 14,
     color: colors.lightGray,
     marginBottom: 8,
     lineHeight: 20,
+    fontFamily: "ChusaLoveBold",
   },
   footerBottom: {
     borderTopWidth: 1,
@@ -378,5 +355,6 @@ export const styles = StyleSheet.create({
   footerCopyright: {
     fontSize: 12,
     color: colors.darkGray,
+    fontFamily: "ChusaLoveBold",
   },
 });

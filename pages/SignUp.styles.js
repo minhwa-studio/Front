@@ -58,16 +58,12 @@ export const styles = StyleSheet.create({
   backButtonText: {
     fontSize: Math.min(width * 0.04, 24),
     color: colors.white,
-    fontWeight: "bold",
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Bold" : "sans-serif-bold",
+    fontFamily: "ChusaLoveBold",
   },
   headerTitle: {
     fontSize: Math.min(width * 0.035, 22),
-    fontWeight: "bold",
     color: colors.traditionalBlack,
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Bold" : "sans-serif-bold",
+    fontFamily: "ChusaLoveBold",
   },
   headerSpacer: {
     width: Math.min(width * 0.08, 40),
@@ -118,20 +114,17 @@ export const styles = StyleSheet.create({
   // 환영 텍스트
   welcomeText: {
     fontSize: Math.min(width * 0.04, 24),
-    fontWeight: "bold",
     color: colors.traditionalBlack,
     textAlign: "center",
     marginBottom: height * 0.01,
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Bold" : "sans-serif-bold",
+    fontFamily: "ChusaLoveBold",
   },
   subtitleText: {
     fontSize: Math.min(width * 0.025, 16),
     color: colors.darkGray,
     textAlign: "center",
     marginBottom: height * 0.04,
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Regular" : "sans-serif",
+    fontFamily: "ChusaLoveBold",
   },
 
   // 입력 필드 그룹
@@ -140,11 +133,9 @@ export const styles = StyleSheet.create({
   },
   inputLabel: {
     fontSize: Math.min(width * 0.025, 16),
-    fontWeight: "600",
     color: colors.traditionalBlack,
     marginBottom: height * 0.01,
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Medium" : "sans-serif-medium",
+    fontFamily: "ChusaLoveBold",
   },
   input: {
     borderWidth: 2,
@@ -155,8 +146,7 @@ export const styles = StyleSheet.create({
     fontSize: Math.min(width * 0.025, 16),
     backgroundColor: colors.white,
     color: colors.traditionalBlack,
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Regular" : "sans-serif",
+    fontFamily: "ChusaLoveBold",
     shadowColor: colors.inkBlack,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
@@ -173,8 +163,7 @@ export const styles = StyleSheet.create({
     fontSize: Math.min(width * 0.02, 14),
     color: colors.error,
     marginTop: height * 0.005,
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Regular" : "sans-serif",
+    fontFamily: "ChusaLoveBold",
   },
 
   // 필수 표시
@@ -215,16 +204,13 @@ export const styles = StyleSheet.create({
   checkboxText: {
     fontSize: Math.min(width * 0.025, 16),
     color: colors.white,
-    fontWeight: "bold",
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Bold" : "sans-serif-bold",
+    fontFamily: "ChusaLoveBold",
   },
   checkboxLabel: {
     fontSize: Math.min(width * 0.025, 16),
     color: colors.traditionalBlack,
     flex: 1,
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Regular" : "sans-serif",
+    fontFamily: "ChusaLoveBold",
   },
 
   // 회원가입 버튼
@@ -242,10 +228,8 @@ export const styles = StyleSheet.create({
   },
   signUpButtonText: {
     fontSize: Math.min(width * 0.03, 18),
-    fontWeight: "bold",
     color: colors.white,
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Bold" : "sans-serif-bold",
+    fontFamily: "ChusaLoveBold",
   },
 
   // 로그인 링크
@@ -257,15 +241,12 @@ export const styles = StyleSheet.create({
   loginLinkText: {
     fontSize: Math.min(width * 0.025, 16),
     color: colors.darkGray,
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Regular" : "sans-serif",
+    fontFamily: "ChusaLoveBold",
   },
   loginLink: {
     fontSize: Math.min(width * 0.025, 16),
     color: colors.primary,
-    fontWeight: "600",
     textDecorationLine: "underline",
-    fontFamily:
-      Platform.OS === "ios" ? "AppleSDGothicNeo-Medium" : "sans-serif-medium",
+    fontFamily: "ChusaLoveBold",
   },
 });
