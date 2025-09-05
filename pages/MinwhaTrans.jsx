@@ -1,15 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  Image,
-  Dimensions,
-  Platform,
-  Alert,
-  Modal,
-  ActivityIndicator,
+  View, Text, TouchableOpacity, ScrollView, Image, Dimensions,
+  Platform, Alert, Modal, ActivityIndicator,
 } from "react-native";
 import { styles } from "./MinwhaTrans.styles";
 import { useAuth } from "../AuthContext";
@@ -22,39 +14,12 @@ const MinwhaTrans = ({ navigation }) => {
   const { userId } = useAuth();
 
   const [uploadedImage, setUploadedImage] = useState(null);
-  const [convertedImages, setConvertedImages] = useState([]);
+  const [convertedImages, setConvertedImages] = useState([]); // [{ id: <image_id>, image: {uri}, timestamp }]
   const [isLoading, setIsLoading] = useState(false);
   const [previewModalVisible, setPreviewModalVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
+  const [lastCreated, setLastCreated] = useState(null); // { id, url, ts }
 
-  useEffect(() => {
-    if (userId) loadHistory();
-  }, [userId]);
-
-  const loadHistory = async () => {
-    try {
-      const { data } = await axios.get(`${API_BASE}/images`, {
-        params: { user_id: userId, limit: 50, skip: 0 },
-      });
-
-      const items = (data || []).map((x) => {
-        // 백엔드가 absolute/relative 둘 다 올 수 있으니 안전하게 처리
-        const rel = x.transform_url || `/image/${x.image_id}/transform`;
-        const url = rel.startsWith("http") ? rel : `${API_BASE}${rel}`;
-        return {
-          id: x.image_id,
-          image: { uri: `${url}?t=${Date.now()}` },
-          timestamp: new Date(x.created_at).toLocaleString(),
-          isFinal: x.is_final,
-        };
-      });
-      setConvertedImages(items);
-    } catch (e) {
-      console.error("❌ 히스토리 로드 실패:", e.response?.data || e.message);
-    }
-  };
-
-  // 이미지 업로드 (웹)
   const handleImageUpload = () => {
     const input = document.createElement("input");
     input.type = "file";
@@ -72,7 +37,6 @@ const MinwhaTrans = ({ navigation }) => {
     input.click();
   };
 
-  // 민화 변환 시작
   const handleConvert = async () => {
     if (!uploadedImage) {
       Alert.alert("알림", "먼저 이미지를 업로드해주세요.");
@@ -82,32 +46,19 @@ const MinwhaTrans = ({ navigation }) => {
     try {
       const formData = new FormData();
       formData.append("user_id", String(userId ?? ""));
-
-      // data URL → Blob
       const response = await fetch(uploadedImage.uri);
       const blob = await response.blob();
-
-      if (Platform.OS === "web") {
-        formData.append("file", blob, "input.png");
-      } else {
-        formData.append("file", {
-          uri: uploadedImage.uri,
-          name: "input.png",
-          type: blob.type || "image/png",
-        });
-      }
+      formData.append("file", blob, "input.png");
 
       const res = await axios.post(`${API_BASE}/predict`, formData); // 헤더 지정 X
-
-      // 서버의 변환 이미지 HTTP URL 생성
       const id = res.data.image_id;
-      const transformUrl = `${API_BASE}/image/${id}/transform?t=${Date.now()}`;
+      const ts = res.data.created_at;
+      const url = `${API_BASE}/image/${id}/transform?t=${Date.now()}`;
 
-      setPreviewImage({ uri: transformUrl });
+      // 미리보기 이미지 + 마지막 생성 메타 저장
+      setPreviewImage({ uri: url });
+      setLastCreated({ id, url, ts });
       setPreviewModalVisible(true);
-
-      // 목록 갱신
-      loadHistory();
     } catch (err) {
       console.error("❌ 변환 실패:", err.response?.data || err.message);
       Alert.alert("실패", "이미지 변환 중 오류가 발생했습니다.");
@@ -116,16 +67,16 @@ const MinwhaTrans = ({ navigation }) => {
     }
   };
 
-  // 미리보기 닫기
   const handleClosePreview = () => {
     setPreviewModalVisible(false);
-    if (previewImage) {
-      const newConvertedImage = {
-        id: Date.now(),
-        image: previewImage,
-        timestamp: new Date().toLocaleString(),
+    if (lastCreated) {
+      const newItem = {
+        id: lastCreated.id, // ✅ DB image_id
+        image: { uri: lastCreated.url },
+        timestamp: new Date(lastCreated.ts).toLocaleString(),
       };
-      setConvertedImages((prev) => [newConvertedImage, ...prev]);
+      setConvertedImages((prev) => [newItem, ...prev]);
+      setLastCreated(null);
       setPreviewImage(null);
     }
   };
@@ -136,8 +87,18 @@ const MinwhaTrans = ({ navigation }) => {
       {
         text: "삭제",
         style: "destructive",
-        onPress: () => {
-          setConvertedImages((prev) => prev.filter((img) => img.id !== imageId));
+        onPress: async () => {
+          try {
+            // 로컬 임시 아이템(예: number)일 수도 있으므로 분기
+            if (typeof imageId !== "string") {
+              setConvertedImages((prev) => prev.filter((img) => img.id !== imageId));
+              return;
+            }
+            await axios.delete(`${API_BASE}/images/${imageId}`);
+            setConvertedImages((prev) => prev.filter((img) => img.id !== imageId));
+          } catch (e) {
+            Alert.alert("삭제 실패", e.response?.data?.detail || e.message);
+          }
         },
       },
     ]);
@@ -218,7 +179,6 @@ const MinwhaTrans = ({ navigation }) => {
                       <TouchableOpacity style={styles.actionButton} onPress={() => handleShareImage(item.image)}>
                         <Text style={styles.actionButtonText}>공유</Text>
                       </TouchableOpacity>
-
                       <TouchableOpacity
                         style={[styles.actionButton, styles.deleteButton]}
                         onPress={() => handleDeleteImage(item.id)}
@@ -258,11 +218,10 @@ const MinwhaTrans = ({ navigation }) => {
               <TouchableOpacity style={styles.modalActionButton} onPress={handleClosePreview}>
                 <Text style={styles.modalActionButtonText}>저장</Text>
               </TouchableOpacity>
-
               <TouchableOpacity
                 style={[styles.modalActionButton, styles.shareButton]}
                 onPress={() => {
-                  handleShareImage(previewImage);
+                  Alert.alert("공유", "이미지 공유 기능은 준비 중입니다.");
                   handleClosePreview();
                 }}
               >
