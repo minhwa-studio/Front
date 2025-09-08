@@ -4,46 +4,34 @@ const { width, height } = Dimensions.get("window");
 
 // Hard Graft 스타일의 미니멀하고 고급스러운 색상 팔레트
 const colors = {
-  // 배경 및 기본 색상
-  background: "#F8F8F8", // 밝은 회색 배경
-  white: "#FFFFFF", // 순백색
-  surface: "#F5F5F5", // 미묘한 회색 표면
-
-  // 텍스트 색상
-  textPrimary: "#1A1A1A", // 진한 검은색 (제목용)
-  textSecondary: "#4A4A4A", // 중간 회색 (부제목용)
-  textTertiary: "#8A8A8A", // 연한 회색 (설명용)
-
-  // 액센트 색상
-  accent: "#2C2C2C", // 어두운 회색 (버튼, 테두리용)
-  accentLight: "#E0E0E0", // 연한 회색 (테두리용)
-
-  // 상태 색상
+  background: "#F8F8F8",
+  white: "#FFFFFF",
+  surface: "#F5F5F5",
+  textPrimary: "#1A1A1A",
+  textSecondary: "#4A4A4A",
+  textTertiary: "#8A8A8A",
+  accent: "#2C2C2C",
+  accentLight: "#E0E0E0",
   success: "#27AE60",
   error: "#E74C3C",
   warning: "#F39C12",
-
-  // 그림자
   shadowLight: "rgba(0, 0, 0, 0.05)",
   shadowMedium: "rgba(0, 0, 0, 0.1)",
   shadowDark: "rgba(0, 0, 0, 0.15)",
 };
 
 export const styles = StyleSheet.create({
-  // 전체 컨테이너 - Hard Graft 스타일
   container: {
     flex: 1,
     backgroundColor: colors.background,
     minWidth: 1200,
   },
-
-  // 스크롤 컨텐츠 컨테이너
   scrollContent: {
     flexGrow: 1,
     minHeight: height,
   },
 
-  // 상단 헤더 - Hard Graft 스타일
+  // 헤더
   header: {
     height: Math.max(80, height * 0.1),
     backgroundColor: colors.white,
@@ -55,7 +43,6 @@ export const styles = StyleSheet.create({
     paddingHorizontal: Math.max(24, width * 0.02),
     width: "100%",
   },
-  // 헤더 센터 영역
   headerCenter: {
     alignItems: "center",
     flex: 1,
@@ -73,8 +60,6 @@ export const styles = StyleSheet.create({
     fontFamily: "ChusaLoveBold",
     letterSpacing: 0.5,
   },
-
-  // 헤더 좌측 버튼
   headerLeftButton: {
     backgroundColor: colors.accent,
     paddingHorizontal: Math.max(16, width * 0.015),
@@ -94,8 +79,6 @@ export const styles = StyleSheet.create({
     fontFamily: "ChusaLoveBold",
     textAlign: "center",
   },
-
-  // 헤더 우측 버튼
   headerRightButton: {
     backgroundColor: colors.accent,
     paddingHorizontal: Math.max(16, width * 0.015),
@@ -116,22 +99,20 @@ export const styles = StyleSheet.create({
     textAlign: "center",
   },
 
-  // 메인 컨텐츠 영역 - 왼쪽만 스크롤
+  // 메인
   mainContent: {
     flex: 1,
     paddingHorizontal: Math.max(40, width * 0.035),
     paddingVertical: Math.max(40, height * 0.04),
-    paddingRight: Math.max(360, width * 0.3), // 오른쪽 고정 영역 공간 확보
+    paddingRight: Math.max(360, width * 0.3),
     width: "100%",
   },
-
-  // 왼쪽 영역 - 원본 이미지 및 결과 갤러리
   leftSection: {
     width: "100%",
     gap: Math.max(40, height * 0.04),
   },
 
-  // 원본 이미지 업로드 영역
+  // 원본 업로드
   originalImageSection: {
     backgroundColor: colors.white,
     borderRadius: 12,
@@ -149,8 +130,6 @@ export const styles = StyleSheet.create({
     marginBottom: Math.max(24, height * 0.025),
     fontFamily: "ChusaLoveBold",
   },
-
-  // 업로드 영역
   uploadArea: {
     height: Math.max(400, height * 0.45),
     borderWidth: 2,
@@ -181,8 +160,6 @@ export const styles = StyleSheet.create({
     textAlign: "center",
     fontFamily: "ChusaLoveBold",
   },
-
-  // 업로드된 이미지 컨테이너
   uploadedImageContainer: {
     height: Math.max(400, height * 0.45),
     borderRadius: 12,
@@ -220,7 +197,7 @@ export const styles = StyleSheet.create({
     fontFamily: "ChusaLoveBold",
   },
 
-  // 변환 결과 갤러리 영역
+  // 결과 갤러리
   resultsSection: {
     backgroundColor: colors.white,
     borderRadius: 12,
@@ -238,8 +215,6 @@ export const styles = StyleSheet.create({
     marginBottom: Math.max(24, height * 0.025),
     fontFamily: "ChusaLoveBold",
   },
-
-  // 결과 이미지 그리드
   resultsGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -247,8 +222,6 @@ export const styles = StyleSheet.create({
     justifyContent: "flex-start",
     width: "100%",
   },
-
-  // 결과 이미지 아이템
   resultImageItem: {
     width: Math.max(180, width * 0.15),
     backgroundColor: colors.surface,
@@ -318,7 +291,7 @@ export const styles = StyleSheet.create({
     fontFamily: "ChusaLoveBold",
   },
 
-  // 오른쪽 고정 영역 - 변환 옵션 및 버튼
+  // 오른쪽 고정
   rightFixedSection: {
     position: "absolute",
     right: Math.max(40, width * 0.035),
@@ -326,8 +299,6 @@ export const styles = StyleSheet.create({
     gap: Math.max(32, height * 0.03),
     zIndex: 10,
   },
-
-  // 변환 옵션 카드
   optionsCard: {
     backgroundColor: colors.white,
     borderRadius: 12,
@@ -377,7 +348,7 @@ export const styles = StyleSheet.create({
     gap: Math.max(12, width * 0.012),
   },
 
-  // 옵션 그룹
+  // 옵션
   optionGroup: {
     marginBottom: Math.max(24, height * 0.025),
     width: "100%",
@@ -410,7 +381,7 @@ export const styles = StyleSheet.create({
     width: "100%",
   },
 
-  // 미리보기 팝업 - Hard Graft 스타일
+  // 미리보기 모달
   modalOverlay: {
     flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.6)",

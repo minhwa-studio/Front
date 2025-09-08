@@ -18,28 +18,30 @@ import { useAuth } from "../AuthContext";
 import axios from "axios";
 
 const { width, height } = Dimensions.get("window");
-const API_BASE = Platform.OS === "android" ? "http://10.0.2.2:8000" : "http://localhost:8000";
+const API_BASE =
+  Platform.OS === "android" ? "http://10.0.2.2:8000" : "http://localhost:8000";
 
 const MinwhaTrans = ({ navigation }) => {
-  const { userId } = useAuth();
+  // ✅ AuthContext에서 user 객체 사용 (id 안전 추출)
+  const { user } = useAuth?.() || {};
+  const userId = user?.id;
 
   const [uploadedImage, setUploadedImage] = useState(null);
-  const [convertedImages, setConvertedImages] = useState([]); // [{ id: <image_id>, image: {uri}, timestamp }]
+  const [convertedImages, setConvertedImages] = useState([]); // [{ id, image:{uri}, timestamp }]
   const [isLoading, setIsLoading] = useState(false);
   const [previewModalVisible, setPreviewModalVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
   const [lastCreated, setLastCreated] = useState(null); // { id, url, ts }
 
-
-  // 새로운 옵션 상태들
+  // 변환 옵션
   const [styleOption, setStyleOption] = useState("traditional");
   const [qualityOption, setQualityOption] = useState("high");
   const [customPrompt, setCustomPrompt] = useState("");
 
-  // 스크롤 위치 상태
+  // 스크롤 위치
   const [scrollY, setScrollY] = useState(0);
 
-  // 이미지 업로드 (갤러리에서 선택)
+  // 이미지 업로드 (웹 전용)
   const handleImageUpload = () => {
     const input = document.createElement("input");
     input.type = "file";
@@ -66,21 +68,26 @@ const MinwhaTrans = ({ navigation }) => {
     try {
       const formData = new FormData();
       formData.append("user_id", String(userId ?? ""));
-      const response = await fetch(uploadedImage.uri);
-      const blob = await response.blob();
+      // 웹 DataURL -> Blob
+      const resp = await fetch(uploadedImage.uri);
+      const blob = await resp.blob();
       formData.append("file", blob, "input.png");
+      // (옵션 전달 필요시 추가)
+      formData.append("style", styleOption);
+      formData.append("quality", qualityOption);
+      if (customPrompt) formData.append("prompt", customPrompt);
 
-      const res = await axios.post(`${API_BASE}/predict`, formData); // 헤더 지정 X
+      // axios가 FormData 헤더 자동 설정
+      const res = await axios.post(`${API_BASE}/predict`, formData);
       const id = res.data.image_id;
       const ts = res.data.created_at;
       const url = `${API_BASE}/image/${id}/transform?t=${Date.now()}`;
 
-      // 미리보기 이미지 + 마지막 생성 메타 저장
       setPreviewImage({ uri: url });
       setLastCreated({ id, url, ts });
       setPreviewModalVisible(true);
     } catch (err) {
-      console.error("❌ 변환 실패:", err.response?.data || err.message);
+      console.error("❌ 변환 실패:", err?.response?.data || err?.message);
       Alert.alert("실패", "이미지 변환 중 오류가 발생했습니다.");
     } finally {
       setIsLoading(false);
@@ -91,7 +98,7 @@ const MinwhaTrans = ({ navigation }) => {
     setPreviewModalVisible(false);
     if (lastCreated) {
       const newItem = {
-        id: lastCreated.id, // ✅ DB image_id
+        id: lastCreated.id,
         image: { uri: lastCreated.url },
         timestamp: new Date(lastCreated.ts).toLocaleString(),
       };
@@ -109,32 +116,30 @@ const MinwhaTrans = ({ navigation }) => {
         style: "destructive",
         onPress: async () => {
           try {
-            // 로컬 임시 아이템(예: number)일 수도 있으므로 분기
-            if (typeof imageId !== "string") {
-              setConvertedImages((prev) => prev.filter((img) => img.id !== imageId));
-              return;
+            // 서버 이미지(문자열 id)인 경우 서버에도 삭제 요청
+            if (typeof imageId === "string") {
+              await axios.delete(`${API_BASE}/images/${imageId}`);
             }
-            await axios.delete(`${API_BASE}/images/${imageId}`);
+            // ✅ 프론트 상태에서 해당 카드만 제거
             setConvertedImages((prev) => prev.filter((img) => img.id !== imageId));
           } catch (e) {
-            Alert.alert("삭제 실패", e.response?.data?.detail || e.message);
+            Alert.alert("삭제 실패", e?.response?.data?.detail || e.message);
           }
         },
       },
     ]);
   };
 
-  const handleShareImage = (image) => {
-    Alert.alert("공유", "이미지 공유 기능은 준비 중입니다.");
+  const handleShareImage = () => {
+    // ✅ 요청사항: "업데이트 예정" 알림만
+    Alert.alert("업데이트 예정");
   };
 
-  // 스크롤 이벤트 핸들러
   const handleScroll = (event) => {
     setScrollY(event.nativeEvent.contentOffset.y);
   };
 
   return (
-
     <ImageBackground
       source={require("../public/hanjiBack.png")}
       style={styles.container}
@@ -148,7 +153,7 @@ const MinwhaTrans = ({ navigation }) => {
         onScroll={handleScroll}
         scrollEventThrottle={16}
       >
-        {/* 상단 헤더 - Hard Graft 스타일 */}
+        {/* 상단 헤더 */}
         <View style={styles.header}>
           <TouchableOpacity
             style={styles.headerLeftButton}
@@ -159,9 +164,7 @@ const MinwhaTrans = ({ navigation }) => {
 
           <View style={styles.headerCenter}>
             <Text style={styles.headerTitle}>민화 변환소</Text>
-            <Text style={styles.headerSubtitle}>
-              AI로 만나는 전통 민화의 아름다움
-            </Text>
+            <Text style={styles.headerSubtitle}>AI로 만나는 전통 민화의 아름다움</Text>
           </View>
 
           <TouchableOpacity
@@ -172,11 +175,11 @@ const MinwhaTrans = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        {/* 메인 컨텐츠 영역 - 왼쪽만 스크롤 */}
+        {/* 메인 컨텐츠 */}
         <View style={styles.mainContent}>
-          {/* 왼쪽 영역 - 원본 이미지 및 결과 갤러리 */}
+          {/* 왼쪽: 업로드/결과 */}
           <View style={styles.leftSection}>
-            {/* 원본 이미지 업로드 영역 */}
+            {/* 원본 업로드 */}
             <View style={styles.originalImageSection}>
               <Text style={styles.sectionTitle}>원본 이미지</Text>
 
@@ -187,73 +190,48 @@ const MinwhaTrans = ({ navigation }) => {
                     style={styles.uploadedImage}
                     resizeMode="contain"
                   />
-                  <TouchableOpacity
-                    style={styles.changeImageButton}
-                    onPress={handleImageUpload}
-                  >
+                  <TouchableOpacity style={styles.changeImageButton} onPress={handleImageUpload}>
                     <Text style={styles.changeImageButtonText}>변경</Text>
                   </TouchableOpacity>
                 </View>
               ) : (
-                <TouchableOpacity
-                  style={styles.uploadArea}
-                  onPress={handleImageUpload}
-                >
+                <TouchableOpacity style={styles.uploadArea} onPress={handleImageUpload}>
                   <Text style={styles.uploadIcon}>📷</Text>
                   <Text style={styles.uploadText}>이미지를 업로드하세요</Text>
-                  <Text style={styles.uploadSubtext}>
-                    JPG, PNG 파일을 지원합니다
-                  </Text>
+                  <Text style={styles.uploadSubtext}>JPG, PNG 파일을 지원합니다</Text>
                 </TouchableOpacity>
               )}
             </View>
 
-            {/* 변환 결과 갤러리 영역 */}
+            {/* 결과 갤러리 */}
             <View style={styles.resultsSection}>
               <Text style={styles.resultsTitle}>변환된 민화 작품</Text>
 
               {convertedImages.length === 0 ? (
                 <View style={styles.emptyState}>
                   <Text style={styles.emptyStateIcon}>🎨</Text>
-                  <Text style={styles.emptyStateText}>
-                    변환된 이미지가 없습니다
-                  </Text>
-                  <Text style={styles.emptyStateSubtext}>
-                    이미지를 업로드하고 변환해보세요
-                  </Text>
+                  <Text style={styles.emptyStateText}>변환된 이미지가 없습니다</Text>
+                  <Text style={styles.emptyStateSubtext}>이미지를 업로드하고 변환해보세요</Text>
                 </View>
               ) : (
                 <View style={styles.resultsGrid}>
                   {convertedImages.map((item) => (
                     <View key={item.id} style={styles.resultImageItem}>
-                      <Image
-                        source={item.image}
-                        style={styles.resultImage}
-                        resizeMode="cover"
-                      />
+                      <Image source={item.image} style={styles.resultImage} resizeMode="cover" />
                       <View style={styles.resultImageInfo}>
-                        <Text style={styles.resultTimestamp}>
-                          {item.timestamp}
-                        </Text>
+                        <Text style={styles.resultTimestamp}>{item.timestamp}</Text>
                         <View style={styles.resultActions}>
                           <TouchableOpacity
                             style={styles.resultActionButton}
-                            onPress={() => handleShareImage(item.image)}
+                            onPress={handleShareImage}
                           >
-                            <Text style={styles.resultActionButtonText}>
-                              공유
-                            </Text>
+                            <Text style={styles.resultActionButtonText}>공유</Text>
                           </TouchableOpacity>
                           <TouchableOpacity
-                            style={[
-                              styles.resultActionButton,
-                              styles.deleteButton,
-                            ]}
+                            style={[styles.resultActionButton, styles.deleteButton]}
                             onPress={() => handleDeleteImage(item.id)}
                           >
-                            <Text style={styles.resultActionButtonText}>
-                              삭제
-                            </Text>
+                            <Text style={styles.resultActionButtonText}>삭제</Text>
                           </TouchableOpacity>
                         </View>
                       </View>
@@ -265,14 +243,13 @@ const MinwhaTrans = ({ navigation }) => {
           </View>
         </View>
 
-        {/* 오른쪽 고정 영역 - 변환 옵션 및 버튼 */}
+        {/* 오른쪽 고정: 옵션/버튼 */}
         <View
           style={[
             styles.rightFixedSection,
             { top: Math.max(120, height * 0.15) + scrollY },
           ]}
         >
-          {/* 변환 옵션 카드 */}
           <View style={styles.optionsCard}>
             <Text style={styles.cardTitle}>변환 옵션</Text>
 
@@ -283,9 +260,7 @@ const MinwhaTrans = ({ navigation }) => {
                 <TouchableOpacity
                   style={[
                     styles.optionInput,
-                    styleOption === "traditional" && {
-                      borderColor: "#2C2C2C",
-                    },
+                    styleOption === "traditional" && { borderColor: "#2C2C2C" },
                   ]}
                   onPress={() => setStyleOption("traditional")}
                 >
@@ -324,9 +299,7 @@ const MinwhaTrans = ({ navigation }) => {
                 <TouchableOpacity
                   style={[
                     styles.optionInput,
-                    qualityOption === "standard" && {
-                      borderColor: "#2C2C2C",
-                    },
+                    qualityOption === "standard" && { borderColor: "#2C2C2C" },
                   ]}
                   onPress={() => setQualityOption("standard")}
                 >
@@ -372,9 +345,13 @@ const MinwhaTrans = ({ navigation }) => {
               />
             </View>
           </View>
+
           {/* 변환 버튼 */}
           <TouchableOpacity
-            style={[styles.convertButton, (!uploadedImage || isLoading) && styles.convertButtonDisabled]}
+            style={[
+              styles.convertButton,
+              (!uploadedImage || isLoading) && styles.convertButtonDisabled,
+            ]}
             onPress={handleConvert}
             disabled={!uploadedImage || isLoading}
           >
@@ -388,8 +365,8 @@ const MinwhaTrans = ({ navigation }) => {
             )}
           </TouchableOpacity>
         </View>
-
       </ScrollView>
+
       {/* 미리보기 팝업 */}
       <Modal
         visible={previewModalVisible}
@@ -417,7 +394,7 @@ const MinwhaTrans = ({ navigation }) => {
               <TouchableOpacity
                 style={[styles.modalActionButton, styles.shareButton]}
                 onPress={() => {
-                  Alert.alert("공유", "이미지 공유 기능은 준비 중입니다.");
+                  Alert.alert("업데이트 예정"); // ✅ 요청 메시지
                   handleClosePreview();
                 }}
               >

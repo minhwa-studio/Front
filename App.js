@@ -8,7 +8,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as Font from "expo-font";
 import { View, Text, ActivityIndicator } from "react-native";
 
-// ✅ AuthContext 추가
+// ✅ AuthContext / Provider
 import { AuthProvider } from "./AuthContext";
 
 // ✅ AuthGate (보호용)
@@ -25,19 +25,18 @@ import MinwhaTrans from "./pages/MinwhaTrans";
 const Stack = createNativeStackNavigator();
 
 // ✅ 보호 스크린을 감싸는 HOC
-const withAuthGate = (ScreenComp) => (props) =>
-  (
-    <AuthGate>
-      <ScreenComp {...props} />
-    </AuthGate>
-  );
+const withAuthGate = (ScreenComp) => (props) => (
+  <AuthGate>
+    <ScreenComp {...props} />
+  </AuthGate>
+);
 
 // ✅ 보호해야 하는 화면만 래핑
 const GalleryProtected = withAuthGate(Gallery);
 const MyAlbumProtected = withAuthGate(MyAlbum);
 const MinwhaTransProtected = withAuthGate(MinwhaTrans);
 
-// 로딩 화면 컴포넌트
+// 로딩 화면 컴포넌트 (폰트 로딩용)
 const LoadingScreen = () => (
   <View
     style={{
@@ -47,7 +46,7 @@ const LoadingScreen = () => (
       backgroundColor: "#F8F8F8",
     }}
   >
-    <ActivityIndicator size="large" color="#8B7355" />
+    <ActivityIndicator size="large" />
     <Text style={{ marginTop: 20, fontSize: 16, color: "#666666" }}>
       폰트 로딩 중...
     </Text>
@@ -72,9 +71,7 @@ export default function App() {
     loadFonts();
   }, []);
 
-  if (!fontsLoaded) {
-    return <LoadingScreen />;
-  }
+  if (!fontsLoaded) return <LoadingScreen />;
 
   return (
     <AuthProvider>
@@ -89,7 +86,7 @@ export default function App() {
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="SignUp" component={SignUp} />
 
-          {/* ✅ 보호 라우트 */}
+          {/* ✅ 보호 라우트 (비로그인 시 자동으로 Login으로 reset 이동) */}
           <Stack.Screen name="Gallery" component={GalleryProtected} />
           <Stack.Screen name="MyAlbum" component={MyAlbumProtected} />
           <Stack.Screen name="MinwhaTrans" component={MinwhaTransProtected} />

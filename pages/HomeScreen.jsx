@@ -90,20 +90,13 @@ const HomeScreen = ({ navigation }) => {
           <View style={styles.headerLeft}>
             <Text style={styles.logo}>민화 사진관</Text>
             <View style={styles.navMenu}>
-              <TouchableOpacity style={styles.navItem}>
-                <Text style={styles.navText}>민화 갤러리</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.navItem}>
-                <Text style={styles.navText}>전시 정보</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.navItem}>
+              <TouchableOpacity style={styles.navItem}
+              onPress={() => navigation.navigate("Gallery")}>
                 <Text style={styles.navText}>디지털 전시관</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.navItem}>
+              <TouchableOpacity style={styles.navItem}
+              onPress={() => navigation.navigate("MinwhaTrans")}>
                 <Text style={styles.navText}>민화 작업실</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.navItem}>
-                <Text style={styles.navText}>담소 마당</Text>
               </TouchableOpacity>
             </View>
           </View>
