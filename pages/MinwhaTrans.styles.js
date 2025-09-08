@@ -265,7 +265,7 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.error,
   },
 
-  // 오른쪽 고정 (컨테이너 자체는 터치 막음)
+  // 오른쪽 고정 (컨테이너 자체는 터치 무시)
   rightFixedSection: {
     position: "absolute",
     right: Math.max(40, width * 0.035),

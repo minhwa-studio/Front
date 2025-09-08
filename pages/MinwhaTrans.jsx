@@ -21,6 +21,19 @@ const { width, height } = Dimensions.get("window");
 const API_BASE =
   Platform.OS === "android" ? "http://10.0.2.2:8000" : "http://localhost:8000";
 
+// ✅ Web에서도 확실히 뜨게 하는 경량 알림 유틸
+const showAlert = (title, message) => {
+  if (Platform.OS === "web") {
+    try {
+      window.alert(message ? `${title}\n${message}` : title);
+    } catch {
+      console.log("ALERT:", title, message || "");
+    }
+  } else {
+    Alert.alert(title, message);
+  }
+};
+
 const MinwhaTrans = ({ navigation }) => {
   const { user } = useAuth?.() || {};
   const userId = user?.id;
@@ -51,7 +64,7 @@ const MinwhaTrans = ({ navigation }) => {
       const reader = new FileReader();
       reader.onload = (e) => {
         setUploadedImage({ uri: e.target.result });
-        Alert.alert("업로드 완료", "이미지가 업로드되었습니다.");
+        showAlert("업로드 완료", "이미지가 업로드되었습니다.");
       };
       reader.readAsDataURL(file);
     };
@@ -60,7 +73,7 @@ const MinwhaTrans = ({ navigation }) => {
 
   const handleConvert = async () => {
     if (!uploadedImage) {
-      Alert.alert("알림", "먼저 이미지를 업로드해주세요.");
+      showAlert("알림", "먼저 이미지를 업로드해주세요.");
       return;
     }
     setIsLoading(true);
@@ -86,7 +99,7 @@ const MinwhaTrans = ({ navigation }) => {
       setPreviewModalVisible(true);
     } catch (err) {
       console.error("❌ 변환 실패:", err?.response?.data || err?.message);
-      Alert.alert("실패", "이미지 변환 중 오류가 발생했습니다.");
+      showAlert("실패", "이미지 변환 중 오류가 발생했습니다.");
     } finally {
       setIsLoading(false);
     }
@@ -107,7 +120,8 @@ const MinwhaTrans = ({ navigation }) => {
   };
 
   const handleDeleteImage = (imageId) => {
-    Alert.alert("이미지 삭제", "이 이미지를 삭제하시겠습니까?", [
+    showAlert("확인", "삭제 버튼 눌림"); // 디버그 토스트
+    Alert.alert?.("이미지 삭제", "이 이미지를 삭제하시겠습니까?", [
       { text: "취소", style: "cancel" },
       {
         text: "삭제",
@@ -120,15 +134,18 @@ const MinwhaTrans = ({ navigation }) => {
             // ✅ 프론트 상태에서 해당 카드 제거
             setConvertedImages((prev) => prev.filter((img) => img.id !== imageId));
           } catch (e) {
-            Alert.alert("삭제 실패", e?.response?.data?.detail || e.message);
+            showAlert("삭제 실패", e?.response?.data?.detail || e.message);
           }
         },
       },
-    ]);
+    ]) ||
+      // RN Web에서 Alert API가 막힌 경우 직접 바로 삭제 처리
+      setConvertedImages((prev) => prev.filter((img) => img.id !== imageId));
   };
 
   const handleShareImage = () => {
-    Alert.alert("업데이트 예정");
+    console.log("share pressed");
+    showAlert("업데이트 예정");
   };
 
   const handleScroll = (event) => {
@@ -158,7 +175,7 @@ const MinwhaTrans = ({ navigation }) => {
             <Text style={styles.headerLeftButtonText}>민화 사진관</Text>
           </TouchableOpacity>
 
-        <View style={styles.headerCenter}>
+          <View style={styles.headerCenter}>
             <Text style={styles.headerTitle}>민화 변환소</Text>
             <Text style={styles.headerSubtitle}>AI로 만나는 전통 민화의 아름다움</Text>
           </View>
@@ -218,14 +235,18 @@ const MinwhaTrans = ({ navigation }) => {
                         <Text style={styles.resultTimestamp}>{item.timestamp}</Text>
                         <View style={styles.resultActions}>
                           <TouchableOpacity
+                            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
                             style={styles.resultActionButton}
                             onPress={handleShareImage}
+                            onPressIn={() => console.log("share pressIn")} // fallback 로그
                           >
                             <Text style={styles.resultActionButtonText}>공유</Text>
                           </TouchableOpacity>
                           <TouchableOpacity
+                            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
                             style={[styles.resultActionButton, styles.deleteButton]}
                             onPress={() => handleDeleteImage(item.id)}
+                            onPressIn={() => console.log("delete pressIn")} // fallback 로그
                           >
                             <Text style={styles.resultActionButtonText}>삭제</Text>
                           </TouchableOpacity>
@@ -239,9 +260,7 @@ const MinwhaTrans = ({ navigation }) => {
           </View>
         </View>
 
-        {/* 오른쪽 고정: 옵션/버튼 
-            - 컨테이너는 pointerEvents: 'none' (아래 터치 방해 금지)
-            - 실제 눌려야 하는 자식(카드/버튼)은 pointerEvents: 'auto' */}
+        {/* 오른쪽 고정: 옵션/버튼 (컨테이너는 터치 무시, 자식은 터치 허용) */}
         <View
           style={[
             styles.rightFixedSection,
@@ -344,7 +363,7 @@ const MinwhaTrans = ({ navigation }) => {
             </View>
           </View>
 
-          {/* 변환 버튼 (자체 클릭 가능하도록 auto) */}
+          {/* 변환 버튼 */}
           <TouchableOpacity
             style={[
               styles.convertButton,
@@ -393,7 +412,7 @@ const MinwhaTrans = ({ navigation }) => {
               <TouchableOpacity
                 style={[styles.modalActionButton, styles.shareButton]}
                 onPress={() => {
-                  Alert.alert("업데이트 예정");
+                  showAlert("업데이트 예정");
                   handleClosePreview();
                 }}
               >
