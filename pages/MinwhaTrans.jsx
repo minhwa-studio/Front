@@ -22,7 +22,6 @@ const API_BASE =
   Platform.OS === "android" ? "http://10.0.2.2:8000" : "http://localhost:8000";
 
 const MinwhaTrans = ({ navigation }) => {
-  // ✅ AuthContext에서 user 객체 사용 (id 안전 추출)
   const { user } = useAuth?.() || {};
   const userId = user?.id;
 
@@ -159,7 +158,7 @@ const MinwhaTrans = ({ navigation }) => {
             <Text style={styles.headerLeftButtonText}>민화 사진관</Text>
           </TouchableOpacity>
 
-          <View style={styles.headerCenter}>
+        <View style={styles.headerCenter}>
             <Text style={styles.headerTitle}>민화 변환소</Text>
             <Text style={styles.headerSubtitle}>AI로 만나는 전통 민화의 아름다움</Text>
           </View>
@@ -240,15 +239,16 @@ const MinwhaTrans = ({ navigation }) => {
           </View>
         </View>
 
-        {/* 오른쪽 고정: 옵션/버튼 */}
+        {/* 오른쪽 고정: 옵션/버튼 
+            - 컨테이너는 pointerEvents: 'none' (아래 터치 방해 금지)
+            - 실제 눌려야 하는 자식(카드/버튼)은 pointerEvents: 'auto' */}
         <View
-          pointerEvents="box-none" // ✅ 패널이 아래 터치 가로채지 않도록
           style={[
             styles.rightFixedSection,
-            { top: Math.max(120, height * 0.15) + scrollY },
+            { top: Math.max(120, height * 0.15) + scrollY, pointerEvents: "none" },
           ]}
         >
-          <View style={styles.optionsCard}>
+          <View style={[styles.optionsCard, { pointerEvents: "auto" }]}>
             <Text style={styles.cardTitle}>변환 옵션</Text>
 
             {/* 스타일 선택 */}
@@ -344,11 +344,12 @@ const MinwhaTrans = ({ navigation }) => {
             </View>
           </View>
 
-          {/* 변환 버튼 */}
+          {/* 변환 버튼 (자체 클릭 가능하도록 auto) */}
           <TouchableOpacity
             style={[
               styles.convertButton,
               (!uploadedImage || isLoading) && styles.convertButtonDisabled,
+              { pointerEvents: "auto" },
             ]}
             onPress={handleConvert}
             disabled={!uploadedImage || isLoading}

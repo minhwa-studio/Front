@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions, Platform } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
 
 const { width, height } = Dimensions.get("window");
 
@@ -13,7 +13,6 @@ const colors = {
   accentLight: "#E0E0E0",
   success: "#27AE60",
   error: "#E74C3C",
-  warning: "#F39C12",
   shadowLight: "rgba(0, 0, 0, 0.05)",
   shadowMedium: "rgba(0, 0, 0, 0.1)",
   shadowDark: "rgba(0, 0, 0, 0.15)",
@@ -220,7 +219,7 @@ export const styles = StyleSheet.create({
     gap: Math.max(16, width * 0.015),
     justifyContent: "flex-start",
     width: "100%",
-    zIndex: 0, // ✅ 아래 레이어로 고정
+    zIndex: 0, // 레이어 명확화
   },
   resultImageItem: {
     width: Math.max(180, width * 0.15),
@@ -266,32 +265,7 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.error,
   },
 
-  // 빈 상태
-  emptyState: {
-    alignItems: "center",
-    paddingVertical: Math.max(40, height * 0.04),
-    width: "100%",
-  },
-  emptyStateIcon: {
-    fontSize: Math.max(48, Math.min(width * 0.06, 64)),
-    marginBottom: Math.max(16, height * 0.015),
-    color: colors.textTertiary,
-  },
-  emptyStateText: {
-    fontSize: Math.max(16, Math.min(width * 0.02, 18)),
-    color: colors.textSecondary,
-    marginBottom: Math.max(8, height * 0.008),
-    fontFamily: "ChusaLoveBold",
-    textAlign: "center",
-  },
-  emptyStateSubtext: {
-    fontSize: Math.max(14, Math.min(width * 0.018, 16)),
-    color: colors.textTertiary,
-    textAlign: "center",
-    fontFamily: "ChusaLoveBold",
-  },
-
-  // 오른쪽 고정 (패널 자체는 아래 터치 방해 금지)
+  // 오른쪽 고정 (컨테이너 자체는 터치 막음)
   rightFixedSection: {
     position: "absolute",
     right: Math.max(40, width * 0.035),
