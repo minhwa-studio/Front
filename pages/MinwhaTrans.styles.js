@@ -2,7 +2,6 @@ import { StyleSheet, Dimensions, Platform } from "react-native";
 
 const { width, height } = Dimensions.get("window");
 
-// Hard Graft 스타일의 미니멀하고 고급스러운 색상 팔레트
 const colors = {
   background: "#F8F8F8",
   white: "#FFFFFF",
@@ -221,6 +220,7 @@ export const styles = StyleSheet.create({
     gap: Math.max(16, width * 0.015),
     justifyContent: "flex-start",
     width: "100%",
+    zIndex: 0, // ✅ 아래 레이어로 고정
   },
   resultImageItem: {
     width: Math.max(180, width * 0.15),
@@ -291,7 +291,7 @@ export const styles = StyleSheet.create({
     fontFamily: "ChusaLoveBold",
   },
 
-  // 오른쪽 고정
+  // 오른쪽 고정 (패널 자체는 아래 터치 방해 금지)
   rightFixedSection: {
     position: "absolute",
     right: Math.max(40, width * 0.035),
@@ -299,6 +299,8 @@ export const styles = StyleSheet.create({
     gap: Math.max(32, height * 0.03),
     zIndex: 10,
   },
+
+  // 옵션 카드
   optionsCard: {
     backgroundColor: colors.white,
     borderRadius: 12,

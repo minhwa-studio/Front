@@ -38,7 +38,7 @@ const MinwhaTrans = ({ navigation }) => {
   const [qualityOption, setQualityOption] = useState("high");
   const [customPrompt, setCustomPrompt] = useState("");
 
-  // 스크롤 위치
+  // 스크롤 위치 (우측 패널 위치 계산용)
   const [scrollY, setScrollY] = useState(0);
 
   // 이미지 업로드 (웹 전용)
@@ -68,16 +68,15 @@ const MinwhaTrans = ({ navigation }) => {
     try {
       const formData = new FormData();
       formData.append("user_id", String(userId ?? ""));
-      // 웹 DataURL -> Blob
+      // 웹 DataURL -> Blob 변환
       const resp = await fetch(uploadedImage.uri);
       const blob = await resp.blob();
       formData.append("file", blob, "input.png");
-      // (옵션 전달 필요시 추가)
+      // 옵션 전달(서버에서 사용 시)
       formData.append("style", styleOption);
       formData.append("quality", qualityOption);
       if (customPrompt) formData.append("prompt", customPrompt);
 
-      // axios가 FormData 헤더 자동 설정
       const res = await axios.post(`${API_BASE}/predict`, formData);
       const id = res.data.image_id;
       const ts = res.data.created_at;
@@ -116,11 +115,10 @@ const MinwhaTrans = ({ navigation }) => {
         style: "destructive",
         onPress: async () => {
           try {
-            // 서버 이미지(문자열 id)인 경우 서버에도 삭제 요청
             if (typeof imageId === "string") {
               await axios.delete(`${API_BASE}/images/${imageId}`);
             }
-            // ✅ 프론트 상태에서 해당 카드만 제거
+            // ✅ 프론트 상태에서 해당 카드 제거
             setConvertedImages((prev) => prev.filter((img) => img.id !== imageId));
           } catch (e) {
             Alert.alert("삭제 실패", e?.response?.data?.detail || e.message);
@@ -131,7 +129,6 @@ const MinwhaTrans = ({ navigation }) => {
   };
 
   const handleShareImage = () => {
-    // ✅ 요청사항: "업데이트 예정" 알림만
     Alert.alert("업데이트 예정");
   };
 
@@ -245,6 +242,7 @@ const MinwhaTrans = ({ navigation }) => {
 
         {/* 오른쪽 고정: 옵션/버튼 */}
         <View
+          pointerEvents="box-none" // ✅ 패널이 아래 터치 가로채지 않도록
           style={[
             styles.rightFixedSection,
             { top: Math.max(120, height * 0.15) + scrollY },
@@ -394,7 +392,7 @@ const MinwhaTrans = ({ navigation }) => {
               <TouchableOpacity
                 style={[styles.modalActionButton, styles.shareButton]}
                 onPress={() => {
-                  Alert.alert("업데이트 예정"); // ✅ 요청 메시지
+                  Alert.alert("업데이트 예정");
                   handleClosePreview();
                 }}
               >
