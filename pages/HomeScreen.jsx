@@ -28,14 +28,6 @@ const HomeScreen = ({ navigation }) => {
     require("../public/monthly_images/어해도.jpg"),
     require("../public/monthly_images/작호도.jpg"),
     require("../public/monthly_images/책가도.jpg"),
-    require("../public/monthly_images/군학장생도.jpg"),
-    require("../public/monthly_images/고독.jpg"),
-    require("../public/monthly_images/空谷跫音(공곡공음).jpg"),
-    require("../public/monthly_images/모란도(37).jpg"),
-    require("../public/monthly_images/화접초충도(4).jpg"),
-    require("../public/monthly_images/풍속도(5).jpg"),
-    require("../public/monthly_images/2018 연화도.jpg"),
-    require("../public/monthly_images/금강산만물초승경도(1).jpg"),
   ];
 
   // GitHub 링크 열기
@@ -92,7 +84,7 @@ const HomeScreen = ({ navigation }) => {
             <View style={styles.navMenu}>
               <TouchableOpacity
                 style={styles.navItem}
-                onPress={() => navigation.navigate("Gallery")}
+                onPress={() => navigation.navigate("DigitalGallery")}
               >
                 <Text style={styles.navText}>디지털 전시관</Text>
               </TouchableOpacity>
