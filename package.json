@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "serve -s dist -l $PORT",
+    "start": "serve -s dist -l ${PORT:-8081}",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "build": "expo export --platform web --output-dir dist --no-pwa --non-interactive"
   },
   "dependencies": {
     "@expo/metro-runtime": "~5.0.4",
