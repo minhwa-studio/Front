@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { API_URL } from "@env";
 import {
   View,
   Text,
@@ -12,7 +13,7 @@ import {
 } from "react-native";
 import axios from "axios";
 import { styles } from "./Login.styles";
-import { useAuth } from "../AuthContext"; 
+import { useAuth } from "../AuthContext";
 const { width, height } = Dimensions.get("window");
 
 const Login = ({ navigation }) => {
@@ -48,47 +49,41 @@ const Login = ({ navigation }) => {
   };
 
   // 유효성 검사
-const validateForm = () => {
-  const errors = {};
+  const validateForm = () => {
+    const errors = {};
 
-  if (!formData.email?.trim()) {
-    errors.email = "이메일을 입력해주세요.";
-  }
-  if (!formData.password?.trim()) {
-    errors.password = "비밀번호를 입력해주세요.";
-  }
+    if (!formData.email?.trim()) {
+      errors.email = "이메일을 입력해주세요.";
+    }
+    if (!formData.password?.trim()) {
+      errors.password = "비밀번호를 입력해주세요.";
+    }
 
-  setErrors(errors);
+    setErrors(errors);
 
-  const isValid = Object.keys(errors).length === 0;
-  console.log("⚠️ 유효성 검사 에러:", errors);
-  return isValid;
-};
-
-
-
+    const isValid = Object.keys(errors).length === 0;
+    console.log("⚠️ 유효성 검사 에러:", errors);
+    return isValid;
+  };
 
   const handleLogin = async () => {
-  if (!validateForm()) return;
+    if (!validateForm()) return;
 
-  try {
-    console.log("🚀 axios 요청 전");
+    try {
+      console.log("🚀 axios 요청 전");
 
-    const response = await axios.post(`http://localhost:8000/user/login`, formData);
-    console.log("✅ 로그인 성공:", response.data);
+      const response = await axios.post(`${API_URL}/user/login`, formData);
+      console.log("✅ 로그인 성공:", response.data);
 
-    const { access_token, user } = response.data; // ✅ 구조 맞게 수정
-    login(user); // ✅ user 그대로 넘기기 (name이 아닌 user 전체)
+      const { access_token, user } = response.data; // ✅ 구조 맞게 수정
+      login(user); // ✅ user 그대로 넘기기 (name이 아닌 user 전체)
 
-    navigation.replace("HomeScreen"); // ✅ 성공 시 이동
-  } catch (err) {
-    console.error("❌ 로그인 실패:", err);
-    Alert.alert("로그인 실패", "이메일 또는 비밀번호가 올바르지 않습니다.");
-  }
-};
-
-
-
+      navigation.replace("HomeScreen"); // ✅ 성공 시 이동
+    } catch (err) {
+      console.error("❌ 로그인 실패:", err);
+      Alert.alert("로그인 실패", "이메일 또는 비밀번호가 올바르지 않습니다.");
+    }
+  };
 
   // 비밀번호 찾기
   const handleForgotPassword = () => {
