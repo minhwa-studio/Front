@@ -1,43 +1,62 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+// AuthContext.js
+import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const AuthContext = createContext();
+/**
+ * 전역 인증 컨텍스트
+ * - isLoggedIn: 로그인 여부
+ * - user: 사용자 전체 객체 (id, name 등)
+ * - login(userData): 로그인 처리 + AsyncStorage 저장
+ * - logout(): 로그아웃 + AsyncStorage 삭제
+ * - loading: 앱 시작 시 복원 중 여부
+ */
+
+export const AuthContext = createContext({
+  isLoggedIn: false,
+  user: null,
+  // ⬇️ 호환 레이어 추가
+  userName: null,
+  userId: null,
+  login: async () => {},
+  logout: async () => {},
+  loading: true,
+});
 
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userName, setUserName] = useState(null);
-  const [userId, setUserId] = useState(null);
-  const [user, setUser] = useState(null); // ✅ user 상태 추가
-  const [loading, setLoading] = useState(true); // 초기 로딩 여부
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   // ✅ 로그인
   const login = async (userData) => {
     setIsLoggedIn(true);
-    setUserName(userData.name);
-    setUserId(userData.id);
     setUser(userData);
-    await AsyncStorage.setItem("user", JSON.stringify(userData)); // 저장
+    try {
+      await AsyncStorage.setItem("user", JSON.stringify(userData));
+    } catch (e) {
+      console.error("AsyncStorage setItem 실패:", e);
+    }
   };
 
   // ✅ 로그아웃
   const logout = async () => {
     setIsLoggedIn(false);
-    setUserName(null);
-    setUserId(null);
     setUser(null);
-    await AsyncStorage.removeItem("user"); // 삭제
+    try {
+      await AsyncStorage.removeItem("user");
+    } catch (e) {
+      console.error("AsyncStorage removeItem 실패:", e);
+    }
   };
 
   // ✅ 앱 시작 시 로그인 상태 복원
   useEffect(() => {
     const restoreUser = async () => {
       try {
-        const storedUser = await AsyncStorage.getItem("user");
-        if (storedUser) {
-          const parsed = JSON.parse(storedUser);
+        const stored = await AsyncStorage.getItem("user");
+        if (stored) {
+          const parsed = JSON.parse(stored);
           setIsLoggedIn(true);
-          setUserName(parsed.name);
-          setUserId(parsed.id);
           setUser(parsed);
         }
       } catch (err) {
@@ -49,13 +68,21 @@ export const AuthProvider = ({ children }) => {
     restoreUser();
   }, []);
 
-  return (
-    <AuthContext.Provider
-      value={{ isLoggedIn, userName, userId, user, login, logout, loading }}
-    >
-      {children}
-    </AuthContext.Provider>
+  const value = useMemo(
+    () => ({
+      isLoggedIn,
+      user,
+      // ⬇️ 호환 레이어: 기존 화면에서 그대로 쓰던 userName/userId 노출
+      userName: user?.name ?? user?.username ?? user?.email ?? null,
+      userId: user?.id ?? user?._id ?? null,
+      login,
+      logout,
+      loading,
+    }),
+    [isLoggedIn, user, loading]
   );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => useContext(AuthContext);

@@ -105,7 +105,7 @@ const validateForm = () => {
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.backButton}
-          onPress={() => navigation.goBack()}
+          onPress={() => navigation.navigate("HomeScreen")}
         >
           <Text style={styles.backButtonText}>‹</Text>
         </TouchableOpacity>
