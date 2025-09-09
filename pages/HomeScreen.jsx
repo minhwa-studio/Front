@@ -24,10 +24,10 @@ const HomeScreen = ({ navigation }) => {
 
   // monthly_images 폴더의 이미지들
   const backgroundImages = [
-    require("../public/monthly_images/이태숙 - 봉황도.jpg"),
-    require("../public/monthly_images/길혜은-책가도.jpg"),
-    require("../public/monthly_images/강향미-호피장막도.jpg"),
-    require("../public/monthly_images/강경미 - 백호도.jpg"),
+    require("../public/monthly_images/모란도.jpg"),
+    require("../public/monthly_images/어해도.jpg"),
+    require("../public/monthly_images/작호도.jpg"),
+    require("../public/monthly_images/책가도.jpg"),
     require("../public/monthly_images/군학장생도.jpg"),
     require("../public/monthly_images/고독.jpg"),
     require("../public/monthly_images/空谷跫音(공곡공음).jpg"),
@@ -90,12 +90,16 @@ const HomeScreen = ({ navigation }) => {
           <View style={styles.headerLeft}>
             <Text style={styles.logo}>민화 사진관</Text>
             <View style={styles.navMenu}>
-              <TouchableOpacity style={styles.navItem}
-              onPress={() => navigation.navigate("Gallery")}>
+              <TouchableOpacity
+                style={styles.navItem}
+                onPress={() => navigation.navigate("Gallery")}
+              >
                 <Text style={styles.navText}>디지털 전시관</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.navItem}
-              onPress={() => navigation.navigate("MinwhaTrans")}>
+              <TouchableOpacity
+                style={styles.navItem}
+                onPress={() => navigation.navigate("MinwhaTrans")}
+              >
                 <Text style={styles.navText}>민화 작업실</Text>
               </TouchableOpacity>
             </View>
