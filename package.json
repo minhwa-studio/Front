@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "yarn start",
-    "android": "yarn start --android",
-    "ios": "yarn start --ios",
-    "web": "yarn start --web"
+    "start": "npm start",
+    "android": "npm start --android",
+    "ios": "npm start --ios",
+    "web": "npm start --web"
   },
   "dependencies": {
     "@expo/metro-runtime": "~5.0.4",
