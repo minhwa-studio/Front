@@ -1,6 +1,7 @@
 // src/store/authStore.js
 import create from "zustand";
 import axios from "axios";
+import { API_URL } from "@env";
 import { Alert, Platform } from "react-native";
 
 /** 로컬/에뮬레이터 접근 가이드
@@ -9,7 +10,7 @@ import { Alert, Platform } from "react-native";
  * - 실디바이스:       http://<PC_IP>:8000
  */
 const API_BASE_URL =
-  Platform.OS === "android" ? "http://10.0.2.2:8000" : "http://localhost:8000";
+  Platform.OS === "android" ? "http://10.0.2.2:8000" : `${API_URL}`;
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -24,9 +25,9 @@ const setAuthHeader = (token) => {
 
 const useAuthStore = create((set, get) => ({
   // -------- 상태 --------
-  user: null,          // { id, name, token? } ← 로그인 붙일 때 사용
-  tempImages: [],      // 임시(미확정) 이미지 목록 (is_final=false)
-  artsByUser: [],      // 최종 확정 이미지 목록 (is_final=true)
+  user: null, // { id, name, token? } ← 로그인 붙일 때 사용
+  tempImages: [], // 임시(미확정) 이미지 목록 (is_final=false)
+  artsByUser: [], // 최종 확정 이미지 목록 (is_final=true)
   loading: false,
 
   // -------- 공통 유틸 --------
@@ -54,7 +55,10 @@ const useAuthStore = create((set, get) => ({
       Alert.alert("성공", "이미지 생성 요청 완료");
       return res.data;
     } catch (err) {
-      console.error("[requestImagePrediction] error:", err?.response?.data || err);
+      console.error(
+        "[requestImagePrediction] error:",
+        err?.response?.data || err
+      );
       Alert.alert("실패", "이미지 생성 중 오류가 발생했습니다.");
       return null;
     } finally {
