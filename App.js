@@ -19,6 +19,7 @@ import HomeScreen from "./pages/HomeScreen";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Gallery from "./pages/Gallery";
+import DigitalGallery from "./pages/DigitalGallery";
 import MyAlbum from "./pages/MyAlbum";
 import MinwhaTrans from "./pages/MinwhaTrans";
 
@@ -33,6 +34,7 @@ const withAuthGate = (ScreenComp) => (props) => (
 
 // ✅ 보호해야 하는 화면만 래핑
 const GalleryProtected = withAuthGate(Gallery);
+const DigitalGalleryProtected = withAuthGate(DigitalGallery);
 const MyAlbumProtected = withAuthGate(MyAlbum);
 const MinwhaTransProtected = withAuthGate(MinwhaTrans);
 
@@ -88,6 +90,7 @@ export default function App() {
 
           {/* ✅ 보호 라우트 (비로그인 시 자동으로 Login으로 reset 이동) */}
           <Stack.Screen name="Gallery" component={GalleryProtected} />
+          <Stack.Screen name="DigitalGallery" component={DigitalGalleryProtected} />
           <Stack.Screen name="MyAlbum" component={MyAlbumProtected} />
           <Stack.Screen name="MinwhaTrans" component={MinwhaTransProtected} />
         </Stack.Navigator>

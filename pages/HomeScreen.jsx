@@ -91,7 +91,7 @@ const HomeScreen = ({ navigation }) => {
             <Text style={styles.logo}>민화 사진관</Text>
             <View style={styles.navMenu}>
               <TouchableOpacity style={styles.navItem}
-              onPress={() => navigation.navigate("Gallery")}>
+              onPress={() => navigation.navigate("DigitalGallery")}>
                 <Text style={styles.navText}>디지털 전시관</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.navItem}
