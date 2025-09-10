@@ -1,7 +1,9 @@
 // src/store/authStore.js
 import create from "zustand";
 import axios from "axios";
-import { API_URL } from "@env";
+import Constants from "expo-constants";
+
+const { API_URL } = Constants.expoConfig.extra;
 import { Alert, Platform } from "react-native";
 
 /** 로컬/에뮬레이터 접근 가이드
