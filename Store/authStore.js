@@ -1,7 +1,9 @@
 // src/store/authStore.js
 import create from "zustand";
 import axios from "axios";
-import { API_URL } from "@env";
+import Constants from "expo-constants";
+
+const { API_URL } = Constants.expoConfig.extra;
 import { Alert, Platform } from "react-native";
 
 /** 로컬/에뮬레이터 접근 가이드
@@ -10,17 +12,7 @@ import { Alert, Platform } from "react-native";
  * - 실디바이스:       http://<PC_IP>:8000
  */
 const API_BASE_URL =
-  Platform.OS === "web"
-    ? process.env.EXPO_PUBLIC_API_BASE || ""
-    : __DEV__ && Platform.OS === "android"
-    ? "http://10.0.2.2:8000"
-    : process.env.EXPO_PUBLIC_API_BASE || "";
-
-if (!API_BASE_URL) {
-  throw new Error(
-    "API_BASE_URL 미설정: EXPO_PUBLIC_API_BASE 환경변수를 세팅하고 재빌드하세요."
-  );
-}
+  Platform.OS === "android" ? "http://10.0.2.2:8000" : `${API_URL}`;
 
 const api = axios.create({
   baseURL: API_BASE_URL,

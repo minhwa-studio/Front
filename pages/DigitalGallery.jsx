@@ -12,13 +12,17 @@ import {
 } from "react-native";
 import { styles } from "./DigitalGallery.styles";
 import { useAuth } from "../AuthContext";
+
 const DigitalGallery = ({ navigation }) => {
   const { width, height } = Dimensions.get("window");
   const { isLoggedIn, userName, logout } = useAuth();
+
   // 상단 섹션의 실제 높이 측정 → 아래 콘텐츠에 paddingTop으로 반영
   const [topHeight, setTopHeight] = useState(height * 0.42);
-  // :흰색_확인_표시: 상세 모달 상태 (복구)
+
+  // ✅ 상세 모달 상태 (복구)
   const [selectedArtwork, setSelectedArtwork] = useState(null);
+
   // 카드 크기(반응형): 넓은 화면에서는 폭 기준, 세로 화면에서는 높이 기준
   const CARD_SIZE = useMemo(
     () => Math.min(width * 0.4, height * 0.5),
@@ -28,6 +32,7 @@ const DigitalGallery = ({ navigation }) => {
     () => CARD_SIZE + width * 0.04,
     [CARD_SIZE, width]
   );
+
   // 창 크기 변경 대응
   useEffect(() => {
     const sub = Dimensions.addEventListener("change", () => {});
@@ -160,6 +165,7 @@ const DigitalGallery = ({ navigation }) => {
           </View>
         </ImageBackground>
       </View>
+
       {/* ===== 콘텐츠(상단 높이에 자동으로 붙음) ===== */}
       <View style={[styles.content]}>
         <View
@@ -185,7 +191,7 @@ const DigitalGallery = ({ navigation }) => {
               >
                 <TouchableOpacity
                   style={styles.artworkCard}
-                  onPress={() => setSelectedArtwork(item)} // :흰색_확인_표시: 클릭 시 모달 오픈
+                  onPress={() => setSelectedArtwork(item)} // ✅ 클릭 시 모달 오픈
                   activeOpacity={0.85}
                 >
                   <View style={styles.artworkFrame}>
@@ -208,7 +214,8 @@ const DigitalGallery = ({ navigation }) => {
           />
           <View style={styles.footerSpace} />
         </View>
-        {/* :흰색_확인_표시: 푸터 복구 */}
+
+        {/* ✅ 푸터 복구 */}
         <View
           style={{
             paddingVertical: 20,
@@ -228,7 +235,8 @@ const DigitalGallery = ({ navigation }) => {
           </Text>
         </View>
       </View>
-      {/* :흰색_확인_표시: 상세 모달 (복구) */}
+
+      {/* ✅ 상세 모달 (복구) */}
       {selectedArtwork && (
         <View
           style={{
@@ -270,6 +278,7 @@ const DigitalGallery = ({ navigation }) => {
               ✕
             </Text>
           </TouchableOpacity>
+
           {/* 모달 내용 */}
           <View
             style={{

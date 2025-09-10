@@ -1,5 +1,7 @@
 import { StyleSheet, Dimensions, Platform } from "react-native";
+
 const { width, height } = Dimensions.get("window");
+
 // 공통 색상 팔레트
 const colors = {
   primary: "#8B7355",
@@ -20,9 +22,12 @@ const colors = {
   galleryWarm: "#F4E4BC",
   galleryShadow: "rgba(0, 0, 0, 0.35)",
 };
+
 export const colorsRef = colors;
+
 export const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.traditionalBlack },
+
   // ===== 상단 섹션 (지붕 + 헤더 + 제목을 한 덩어리로) =====
   topSection: {
     width: "100%",
@@ -31,6 +36,7 @@ export const styles = StyleSheet.create({
     position: "relative",
     zIndex: 5,
   },
+
   // 지붕 배경
   roofBackground: {
     position: "absolute",
@@ -41,6 +47,7 @@ export const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
   },
+
   // 헤더(배경 위에 떠있게)
   header: {
     width: "100%",

@@ -44,7 +44,7 @@ const HomeScreen = ({ navigation }) => {
     <View style={styles.container}>
       {/* ===== VIDEO BACKGROUND ===== */}
       <VideoBackground onVideoChange={handleVideoChange} />
-      
+
       {/* ===== HEADER SECTION ===== */}
       <View style={styles.header}>
         {/* 상단 헤더 */}
@@ -112,7 +112,7 @@ const HomeScreen = ({ navigation }) => {
         <View style={styles.backgroundOverlay} />
 
         {/* 메인 콘텐츠 */}
-        <Animated.View 
+        <Animated.View
           style={[
             styles.mainContent,
             {

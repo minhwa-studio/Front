@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import Constants from "expo-constants";
+
+const { API_URL } = Constants.expoConfig.extra;
 import {
   View,
   Text,
@@ -19,7 +22,7 @@ import axios from "axios";
 
 const { width, height } = Dimensions.get("window");
 const API_BASE =
-  Platform.OS === "android" ? "http://10.0.2.2:8000" : "http://localhost:8000";
+  Platform.OS === "android" ? "http://10.0.2.2:8000" : `${API_URL}`;
 
 // ✅ Web에서도 확실히 뜨게 하는 경량 알림 유틸
 const showAlert = (title, message) => {
@@ -132,7 +135,9 @@ const MinwhaTrans = ({ navigation }) => {
               await axios.delete(`${API_BASE}/images/${imageId}`);
             }
             // ✅ 프론트 상태에서 해당 카드 제거
-            setConvertedImages((prev) => prev.filter((img) => img.id !== imageId));
+            setConvertedImages((prev) =>
+              prev.filter((img) => img.id !== imageId)
+            );
           } catch (e) {
             showAlert("삭제 실패", e?.response?.data?.detail || e.message);
           }
@@ -177,7 +182,9 @@ const MinwhaTrans = ({ navigation }) => {
 
           <View style={styles.headerCenter}>
             <Text style={styles.headerTitle}>민화 변환소</Text>
-            <Text style={styles.headerSubtitle}>AI로 만나는 전통 민화의 아름다움</Text>
+            <Text style={styles.headerSubtitle}>
+              AI로 만나는 전통 민화의 아름다움
+            </Text>
           </View>
 
           <TouchableOpacity
@@ -203,15 +210,23 @@ const MinwhaTrans = ({ navigation }) => {
                     style={styles.uploadedImage}
                     resizeMode="contain"
                   />
-                  <TouchableOpacity style={styles.changeImageButton} onPress={handleImageUpload}>
+                  <TouchableOpacity
+                    style={styles.changeImageButton}
+                    onPress={handleImageUpload}
+                  >
                     <Text style={styles.changeImageButtonText}>변경</Text>
                   </TouchableOpacity>
                 </View>
               ) : (
-                <TouchableOpacity style={styles.uploadArea} onPress={handleImageUpload}>
+                <TouchableOpacity
+                  style={styles.uploadArea}
+                  onPress={handleImageUpload}
+                >
                   <Text style={styles.uploadIcon}>📷</Text>
                   <Text style={styles.uploadText}>이미지를 업로드하세요</Text>
-                  <Text style={styles.uploadSubtext}>JPG, PNG 파일을 지원합니다</Text>
+                  <Text style={styles.uploadSubtext}>
+                    JPG, PNG 파일을 지원합니다
+                  </Text>
                 </TouchableOpacity>
               )}
             </View>
@@ -223,16 +238,26 @@ const MinwhaTrans = ({ navigation }) => {
               {convertedImages.length === 0 ? (
                 <View style={styles.emptyState}>
                   <Text style={styles.emptyStateIcon}>🎨</Text>
-                  <Text style={styles.emptyStateText}>변환된 이미지가 없습니다</Text>
-                  <Text style={styles.emptyStateSubtext}>이미지를 업로드하고 변환해보세요</Text>
+                  <Text style={styles.emptyStateText}>
+                    변환된 이미지가 없습니다
+                  </Text>
+                  <Text style={styles.emptyStateSubtext}>
+                    이미지를 업로드하고 변환해보세요
+                  </Text>
                 </View>
               ) : (
                 <View style={styles.resultsGrid}>
                   {convertedImages.map((item) => (
                     <View key={item.id} style={styles.resultImageItem}>
-                      <Image source={item.image} style={styles.resultImage} resizeMode="cover" />
+                      <Image
+                        source={item.image}
+                        style={styles.resultImage}
+                        resizeMode="cover"
+                      />
                       <View style={styles.resultImageInfo}>
-                        <Text style={styles.resultTimestamp}>{item.timestamp}</Text>
+                        <Text style={styles.resultTimestamp}>
+                          {item.timestamp}
+                        </Text>
                         <View style={styles.resultActions}>
                           <TouchableOpacity
                             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
@@ -240,15 +265,22 @@ const MinwhaTrans = ({ navigation }) => {
                             onPress={handleShareImage}
                             onPressIn={() => console.log("share pressIn")} // fallback 로그
                           >
-                            <Text style={styles.resultActionButtonText}>공유</Text>
+                            <Text style={styles.resultActionButtonText}>
+                              공유
+                            </Text>
                           </TouchableOpacity>
                           <TouchableOpacity
                             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-                            style={[styles.resultActionButton, styles.deleteButton]}
+                            style={[
+                              styles.resultActionButton,
+                              styles.deleteButton,
+                            ]}
                             onPress={() => handleDeleteImage(item.id)}
                             onPressIn={() => console.log("delete pressIn")} // fallback 로그
                           >
-                            <Text style={styles.resultActionButtonText}>삭제</Text>
+                            <Text style={styles.resultActionButtonText}>
+                              삭제
+                            </Text>
                           </TouchableOpacity>
                         </View>
                       </View>
@@ -264,7 +296,10 @@ const MinwhaTrans = ({ navigation }) => {
         <View
           style={[
             styles.rightFixedSection,
-            { top: Math.max(120, height * 0.15) + scrollY, pointerEvents: "none" },
+            {
+              top: Math.max(120, height * 0.15) + scrollY,
+              pointerEvents: "none",
+            },
           ]}
         >
           <View style={[styles.optionsCard, { pointerEvents: "auto" }]}>
@@ -396,17 +431,27 @@ const MinwhaTrans = ({ navigation }) => {
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>변환 완료!</Text>
-              <TouchableOpacity style={styles.closeButton} onPress={handleClosePreview}>
+              <TouchableOpacity
+                style={styles.closeButton}
+                onPress={handleClosePreview}
+              >
                 <Text style={styles.closeButtonText}>×</Text>
               </TouchableOpacity>
             </View>
 
             <View style={styles.modalImageContainer}>
-              <Image source={previewImage} style={styles.modalImage} resizeMode="contain" />
+              <Image
+                source={previewImage}
+                style={styles.modalImage}
+                resizeMode="contain"
+              />
             </View>
 
             <View style={styles.modalActions}>
-              <TouchableOpacity style={styles.modalActionButton} onPress={handleClosePreview}>
+              <TouchableOpacity
+                style={styles.modalActionButton}
+                onPress={handleClosePreview}
+              >
                 <Text style={styles.modalActionButtonText}>저장</Text>
               </TouchableOpacity>
               <TouchableOpacity

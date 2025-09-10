@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import Constants from "expo-constants";
+
+const { API_URL } = Constants.expoConfig.extra;
 import {
   View,
   Text,
@@ -11,7 +14,7 @@ import {
   Alert,
 } from "react-native";
 import { styles } from "./SignUp.styles";
-import { useAuth } from "../AuthContext"; 
+import { useAuth } from "../AuthContext";
 import axios from "axios";
 const { width, height } = Dimensions.get("window");
 
@@ -107,60 +110,56 @@ const SignUp = ({ navigation }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  
-
   // 회원가입 제출
-const handleSignUp = async () => {
-  if (!validateForm()) return;
+  const handleSignUp = async () => {
+    if (!validateForm()) return;
 
-  try {
-    const response = await axios.post(
-      "http://localhost:8000/user/signup",
-      {
-        email: formData.email,
-        password: formData.password,
-        name: formData.name,
-        phone: formData.phone,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    if (response.status === 200 || response.status === 201) {
-      Alert.alert("회원가입 완료", "민화 사진관에 오신 것을 환영합니다!", [
+    try {
+      const response = await axios.post(
+        `${API_URL}/user/signup`,
         {
-          text: "확인",
-          onPress: () => {
-            // navigation 확인
-            if (navigation && typeof navigation.navigate === "function") {
-              login(formData.name);
-              navigation.navigate("HomeScreen");
-            } else {
-              console.warn("navigation 오류: 이동 실패");
-            }
-          },
+          email: formData.email,
+          password: formData.password,
+          name: formData.name,
+          phone: formData.phone,
         },
-      ]);
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 200 || response.status === 201) {
+        Alert.alert("회원가입 완료", "민화 사진관에 오신 것을 환영합니다!", [
+          {
+            text: "확인",
+            onPress: () => {
+              // navigation 확인
+              if (navigation && typeof navigation.navigate === "function") {
+                login(formData.name);
+                navigation.navigate("HomeScreen");
+              } else {
+                console.warn("navigation 오류: 이동 실패");
+              }
+            },
+          },
+        ]);
+      }
+    } catch (error) {
+      const message =
+        error?.response?.data?.detail || "회원가입에 실패했습니다.";
+
+      if (message === "Email already registered") {
+        setErrors((prev) => ({
+          ...prev,
+          email: "이미 등록된 이메일입니다.",
+        }));
+      } else {
+        Alert.alert("에러", message);
+      }
     }
-  } catch (error) {
-    const message =
-      error?.response?.data?.detail || "회원가입에 실패했습니다.";
-
-    if (message === "Email already registered") {
-      setErrors((prev) => ({
-        ...prev,
-        email: "이미 등록된 이메일입니다.",
-      }));
-    } else {
-      Alert.alert("에러", message);
-    }
-  }
-};
-
-
+  };
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
