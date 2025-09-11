@@ -39,8 +39,8 @@ const showAlert = (title, message) => {
 
 /* ===========================
    🧪 이미지 디버그 유틸
-   - HEAD로 헤더/메타 먼저 로깅
-   - 필요 시 GET으로 blob 크기/타입 로깅
+   - HEAD는 서버 미지원 시 405 가능 (경고용)
+   - GET으로 실제 content-type/size 확인
    - ngrok 경고 우회 헤더 자동 포함(웹)
 =========================== */
 const headers_for_web =
@@ -50,7 +50,7 @@ async function log_image_debug_all(url) {
   console.group("🧪 IMAGE DEBUG");
   console.log("URL:", url);
 
-  // 1) HEAD 시도 (서버에서 미지원이면 405가 날 수 있음)
+  // 1) HEAD 시도 (미지원이면 405)
   try {
     const t0 = performance?.now?.() ?? Date.now();
     const headRes = await fetch(url, {
@@ -98,6 +98,14 @@ const with_ngrok_skip = (url) =>
   Platform.OS === "web"
     ? `${url}${url.includes("?") ? "&" : "?"}ngrok-skip-browser-warning=true`
     : url;
+
+// ✅ 웹 전용 안전 표시: fetch → blob URL (ngrok 경고/정책 우회)
+async function fetch_image_blob_url(url) {
+  const res = await fetch(url, { headers: headers_for_web });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const blob = await res.blob();
+  return URL.createObjectURL(blob);
+}
 
 const MinwhaTrans = ({ navigation }) => {
   const { user } = useAuth?.() || {};
@@ -174,15 +182,34 @@ const MinwhaTrans = ({ navigation }) => {
       const id = res.data.image_id;
       const ts = res.data.created_at;
 
-      // 🔴 A방법 적용: 표시용 URL에 ngrok 우회 파라미터 부착
+      // 🔴 A방법 + 캐시 버스터
       const rawUrl = `${API_BASE}/image/${id}/transform?t=${Date.now()}`;
       const viewUrl = with_ngrok_skip(rawUrl);
 
-      // 🧪 이미지 요청/헤더/본문 타입/사이즈 전부 로깅
+      // 🧪 디버그: 실제 응답 유형/크기 확인
       log_image_debug_all(viewUrl);
 
-      setPreviewImage({ uri: viewUrl });
-      setLastCreated({ id, url: viewUrl, ts });
+      // ⬇️ 실서비스 ngrok 환경: 웹은 항상 blob로 변환해 표시(안정성 최우선)
+      if (Platform.OS === "web") {
+        try {
+          const blob_url = await fetch_image_blob_url(viewUrl);
+          setPreviewImage({ uri: blob_url });
+          setLastCreated({ id, url: blob_url, ts }); // 갤러리에도 blob URL 저장
+          console.log("✅ preview use blob:", blob_url);
+        } catch (err) {
+          console.error(
+            "❌ blob prefetch failed, fallback to URL:",
+            err?.message || err
+          );
+          setPreviewImage({ uri: viewUrl }); // 예비 폴백
+          setLastCreated({ id, url: viewUrl, ts });
+        }
+      } else {
+        // 네이티브(Android/iOS)는 직접 URL로 표시
+        setPreviewImage({ uri: viewUrl });
+        setLastCreated({ id, url: viewUrl, ts });
+      }
+
       setPreviewModalVisible(true);
     } catch (err) {
       console.error("❌ 변환 실패:", err?.response?.data || err?.message);
@@ -197,7 +224,7 @@ const MinwhaTrans = ({ navigation }) => {
     if (lastCreated) {
       const newItem = {
         id: lastCreated.id,
-        image: { uri: lastCreated.url }, // 이미 viewUrl(파라미터 포함)
+        image: { uri: lastCreated.url }, // 웹이면 blob, 네이티브면 URL
         timestamp: new Date(lastCreated.ts).toLocaleString(),
       };
       setConvertedImages((prev) => [newItem, ...prev]);
@@ -365,12 +392,40 @@ const MinwhaTrans = ({ navigation }) => {
                             source: nativeEvent?.source,
                           })
                         }
-                        onError={(e) =>
+                        onError={async (e) => {
                           console.log("🖼️ gallery onError:", {
                             id: item.id,
                             error: e?.nativeEvent,
-                          })
-                        }
+                          });
+                          // URL 이미지가 실패할 경우(예: 새로고침 등으로 blob 소실, 혹은 ngrok 정책 변화)
+                          if (
+                            Platform.OS === "web" &&
+                            item.image?.uri &&
+                            typeof item.image.uri === "string" &&
+                            item.image.uri.startsWith("http")
+                          ) {
+                            try {
+                              const blob_url = await fetch_image_blob_url(
+                                with_ngrok_skip(item.image.uri)
+                              );
+                              setConvertedImages((prev) =>
+                                prev.map((x) =>
+                                  x.id === item.id
+                                    ? { ...x, image: { uri: blob_url } }
+                                    : x
+                                )
+                              );
+                              console.log("✅ gallery fallback → blob:", {
+                                id: item.id,
+                              });
+                            } catch (err) {
+                              console.error(
+                                "❌ gallery blob fallback failed:",
+                                err?.message || err
+                              );
+                            }
+                          }
+                        }}
                         onLoadEnd={() =>
                           console.log("🖼️ gallery onLoadEnd:", item.id)
                         }
@@ -565,16 +620,38 @@ const MinwhaTrans = ({ navigation }) => {
                 source={previewImage}
                 style={styles.modalImage}
                 resizeMode="contain"
-                /* 🧪 미리보기 이미지 로딩 로그 */
+                /* 🧪 미리보기 이미지 로딩 로그 + 폴백 */
                 onLoadStart={() =>
                   console.log("🔎 preview onLoadStart:", previewImage?.uri)
                 }
                 onLoad={({ nativeEvent }) =>
                   console.log("🔎 preview onLoad:", nativeEvent?.source)
                 }
-                onError={(e) =>
-                  console.log("🔎 preview onError:", e?.nativeEvent)
-                }
+                onError={async (e) => {
+                  console.log("🔎 preview onError:", e?.nativeEvent);
+                  if (
+                    Platform.OS === "web" &&
+                    previewImage?.uri &&
+                    typeof previewImage.uri === "string" &&
+                    previewImage.uri.startsWith("http")
+                  ) {
+                    try {
+                      const blob_url = await fetch_image_blob_url(
+                        with_ngrok_skip(previewImage.uri)
+                      );
+                      setPreviewImage({ uri: blob_url });
+                      setLastCreated((prev) =>
+                        prev ? { ...prev, url: blob_url } : prev
+                      );
+                      console.log("✅ preview fallback → blob:", blob_url);
+                    } catch (err) {
+                      console.error(
+                        "❌ preview blob fallback failed:",
+                        err?.message || err
+                      );
+                    }
+                  }
+                }}
                 onLoadEnd={() => console.log("🔎 preview onLoadEnd")}
               />
             </View>
