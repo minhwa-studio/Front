@@ -50,7 +50,7 @@ async function log_image_debug_all(url) {
   console.group("🧪 IMAGE DEBUG");
   console.log("URL:", url);
 
-  // 1) HEAD 시도
+  // 1) HEAD 시도 (서버에서 미지원이면 405가 날 수 있음)
   try {
     const t0 = performance?.now?.() ?? Date.now();
     const headRes = await fetch(url, {
@@ -92,6 +92,12 @@ async function log_image_debug_all(url) {
   }
   console.groupEnd();
 }
+
+// ✅ A방법: ngrok 경고 우회 파라미터를 URL에 부착
+const with_ngrok_skip = (url) =>
+  Platform.OS === "web"
+    ? `${url}${url.includes("?") ? "&" : "?"}ngrok-skip-browser-warning=true`
+    : url;
 
 const MinwhaTrans = ({ navigation }) => {
   const { user } = useAuth?.() || {};
@@ -154,6 +160,7 @@ const MinwhaTrans = ({ navigation }) => {
       if (customPrompt) formData.append("prompt", customPrompt);
 
       const res = await axios.post(`${API_BASE}/predict`, formData);
+
       // 🧪 /predict 디버그 로그
       try {
         console.group("🧪 /predict RESPONSE");
@@ -166,13 +173,16 @@ const MinwhaTrans = ({ navigation }) => {
 
       const id = res.data.image_id;
       const ts = res.data.created_at;
-      const url = `${API_BASE}/image/${id}/transform?t=${Date.now()}`;
+
+      // 🔴 A방법 적용: 표시용 URL에 ngrok 우회 파라미터 부착
+      const rawUrl = `${API_BASE}/image/${id}/transform?t=${Date.now()}`;
+      const viewUrl = with_ngrok_skip(rawUrl);
 
       // 🧪 이미지 요청/헤더/본문 타입/사이즈 전부 로깅
-      log_image_debug_all(url);
+      log_image_debug_all(viewUrl);
 
-      setPreviewImage({ uri: url });
-      setLastCreated({ id, url, ts });
+      setPreviewImage({ uri: viewUrl });
+      setLastCreated({ id, url: viewUrl, ts });
       setPreviewModalVisible(true);
     } catch (err) {
       console.error("❌ 변환 실패:", err?.response?.data || err?.message);
@@ -187,7 +197,7 @@ const MinwhaTrans = ({ navigation }) => {
     if (lastCreated) {
       const newItem = {
         id: lastCreated.id,
-        image: { uri: lastCreated.url },
+        image: { uri: lastCreated.url }, // 이미 viewUrl(파라미터 포함)
         timestamp: new Date(lastCreated.ts).toLocaleString(),
       };
       setConvertedImages((prev) => [newItem, ...prev]);
