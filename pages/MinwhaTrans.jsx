@@ -37,6 +37,62 @@ const showAlert = (title, message) => {
   }
 };
 
+/* ===========================
+   🧪 이미지 디버그 유틸
+   - HEAD로 헤더/메타 먼저 로깅
+   - 필요 시 GET으로 blob 크기/타입 로깅
+   - ngrok 경고 우회 헤더 자동 포함(웹)
+=========================== */
+const headers_for_web =
+  Platform.OS === "web" ? { "ngrok-skip-browser-warning": "true" } : {};
+
+async function log_image_debug_all(url) {
+  console.group("🧪 IMAGE DEBUG");
+  console.log("URL:", url);
+
+  // 1) HEAD 시도
+  try {
+    const t0 = performance?.now?.() ?? Date.now();
+    const headRes = await fetch(url, {
+      method: "HEAD",
+      headers: headers_for_web,
+    });
+    const t1 = performance?.now?.() ?? Date.now();
+    console.log("HEAD status:", headRes.status, headRes.statusText);
+    const headHeaders = {};
+    headRes.headers?.forEach?.((v, k) => (headHeaders[k] = v));
+    console.log("HEAD headers:", headHeaders);
+    console.log("HEAD duration(ms):", Math.round(t1 - t0));
+  } catch (e) {
+    console.warn("HEAD failed:", e?.message || e);
+  }
+
+  // 2) GET으로 본문 유형/크기 확인
+  try {
+    const t0 = performance?.now?.() ?? Date.now();
+    const res = await fetch(url, { method: "GET", headers: headers_for_web });
+    const t1 = performance?.now?.() ?? Date.now();
+
+    const resHeaders = {};
+    res.headers?.forEach?.((v, k) => (resHeaders[k] = v));
+    const contentType = res.headers?.get?.("content-type") || "";
+    console.log("GET status:", res.status, res.statusText);
+    console.log("GET headers:", resHeaders);
+    console.log("GET duration(ms):", Math.round(t1 - t0));
+
+    if (contentType.startsWith("image/")) {
+      const blob = await res.blob();
+      console.log("Image blob -> type:", blob.type, " size(bytes):", blob.size);
+    } else {
+      const text = await res.text();
+      console.log("Non-image body sample(0..300):", text.slice(0, 300));
+    }
+  } catch (e) {
+    console.error("GET failed:", e?.message || e);
+  }
+  console.groupEnd();
+}
+
 const MinwhaTrans = ({ navigation }) => {
   const { user } = useAuth?.() || {};
   const userId = user?.id;
@@ -68,6 +124,11 @@ const MinwhaTrans = ({ navigation }) => {
       reader.onload = (e) => {
         setUploadedImage({ uri: e.target.result });
         showAlert("업로드 완료", "이미지가 업로드되었습니다.");
+        console.log("🧪 Uploaded file:", {
+          name: file.name,
+          type: file.type,
+          size: file.size,
+        });
       };
       reader.readAsDataURL(file);
     };
@@ -93,9 +154,22 @@ const MinwhaTrans = ({ navigation }) => {
       if (customPrompt) formData.append("prompt", customPrompt);
 
       const res = await axios.post(`${API_BASE}/predict`, formData);
+      // 🧪 /predict 디버그 로그
+      try {
+        console.group("🧪 /predict RESPONSE");
+        console.log("status:", res.status);
+        console.log("statusText:", res.statusText);
+        console.log("headers:", res.headers);
+        console.log("data:", res.data);
+        console.groupEnd();
+      } catch {}
+
       const id = res.data.image_id;
       const ts = res.data.created_at;
       const url = `${API_BASE}/image/${id}/transform?t=${Date.now()}`;
+
+      // 🧪 이미지 요청/헤더/본문 타입/사이즈 전부 로깅
+      log_image_debug_all(url);
 
       setPreviewImage({ uri: url });
       setLastCreated({ id, url, ts });
@@ -209,6 +283,20 @@ const MinwhaTrans = ({ navigation }) => {
                     source={uploadedImage}
                     style={styles.uploadedImage}
                     resizeMode="contain"
+                    /* 🧪 원본 미리보기 로딩 로그 */
+                    onLoadStart={() =>
+                      console.log(
+                        "📷 original onLoadStart:",
+                        uploadedImage?.uri
+                      )
+                    }
+                    onLoad={({ nativeEvent }) =>
+                      console.log("📷 original onLoad:", nativeEvent?.source)
+                    }
+                    onError={(e) =>
+                      console.log("📷 original onError:", e?.nativeEvent)
+                    }
+                    onLoadEnd={() => console.log("📷 original onLoadEnd")}
                   />
                   <TouchableOpacity
                     style={styles.changeImageButton}
@@ -253,6 +341,29 @@ const MinwhaTrans = ({ navigation }) => {
                         source={item.image}
                         style={styles.resultImage}
                         resizeMode="cover"
+                        /* 🧪 갤러리 이미지 로딩 로그 */
+                        onLoadStart={() =>
+                          console.log(
+                            "🖼️ gallery onLoadStart:",
+                            item.image?.uri
+                          )
+                        }
+                        onLoad={({ nativeEvent }) =>
+                          console.log("🖼️ gallery onLoad:", {
+                            id: item.id,
+                            timestamp: item.timestamp,
+                            source: nativeEvent?.source,
+                          })
+                        }
+                        onError={(e) =>
+                          console.log("🖼️ gallery onError:", {
+                            id: item.id,
+                            error: e?.nativeEvent,
+                          })
+                        }
+                        onLoadEnd={() =>
+                          console.log("🖼️ gallery onLoadEnd:", item.id)
+                        }
                       />
                       <View style={styles.resultImageInfo}>
                         <Text style={styles.resultTimestamp}>
@@ -444,6 +555,17 @@ const MinwhaTrans = ({ navigation }) => {
                 source={previewImage}
                 style={styles.modalImage}
                 resizeMode="contain"
+                /* 🧪 미리보기 이미지 로딩 로그 */
+                onLoadStart={() =>
+                  console.log("🔎 preview onLoadStart:", previewImage?.uri)
+                }
+                onLoad={({ nativeEvent }) =>
+                  console.log("🔎 preview onLoad:", nativeEvent?.source)
+                }
+                onError={(e) =>
+                  console.log("🔎 preview onError:", e?.nativeEvent)
+                }
+                onLoadEnd={() => console.log("🔎 preview onLoadEnd")}
               />
             </View>
 
