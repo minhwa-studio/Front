@@ -25,17 +25,19 @@ const DigitalGallery = ({ navigation }) => {
 
   // 카드 크기(반응형): 넓은 화면에서는 폭 기준, 세로 화면에서는 높이 기준
   const CARD_SIZE = useMemo(
-    () => Math.min(width * 0.40, height * 0.50),
+    () => Math.min(width * 0.4, height * 0.5),
     [width, height]
   );
-  const SNAP_INTERVAL = useMemo(() => CARD_SIZE + width * 0.04, [CARD_SIZE, width]);
+  const SNAP_INTERVAL = useMemo(
+    () => CARD_SIZE + width * 0.04,
+    [CARD_SIZE, width]
+  );
 
   // 창 크기 변경 대응
   useEffect(() => {
     const sub = Dimensions.addEventListener("change", () => {});
     return () => sub?.remove?.();
   }, []);
-
   // 작품별 hover 애니메이션 값 (웹만)
   const hoverAnim = useRef([]).current;
   const ensureHover = (idx) => {
@@ -58,7 +60,6 @@ const DigitalGallery = ({ navigation }) => {
       useNativeDriver: true,
     }).start();
   };
-
   const artworks = [
     {
       id: 1,
@@ -97,7 +98,6 @@ const DigitalGallery = ({ navigation }) => {
       technique: "민화",
     },
   ];
-
   return (
     <View style={styles.container}>
       {/* ===== 상단 섹션(지붕 + 헤더 + 제목) ===== */}
@@ -156,7 +156,6 @@ const DigitalGallery = ({ navigation }) => {
               )}
             </View>
           </View>
-
           {/* 제목/부제 (배경 이미지 안) */}
           <View style={styles.galleryTitleContainer}>
             <Text style={styles.galleryTitle}>민화 디지털 전시관</Text>
@@ -169,7 +168,9 @@ const DigitalGallery = ({ navigation }) => {
 
       {/* ===== 콘텐츠(상단 높이에 자동으로 붙음) ===== */}
       <View style={[styles.content]}>
-        <View style={[styles.artworkContainer, { paddingTop: Math.max(0, 12) }]}>
+        <View
+          style={[styles.artworkContainer, { paddingTop: Math.max(0, 12) }]}
+        >
           <FlatList
             data={artworks}
             horizontal
@@ -240,7 +241,10 @@ const DigitalGallery = ({ navigation }) => {
         <View
           style={{
             position: "absolute",
-            top: 0, left: 0, right: 0, bottom: 0,
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
             backgroundColor: "rgba(0,0,0,0.9)",
             justifyContent: "center",
             alignItems: "center",
@@ -254,13 +258,23 @@ const DigitalGallery = ({ navigation }) => {
               position: "absolute",
               top: 24,
               right: 24,
-              width: 44, height: 44, borderRadius: 22,
+              width: 44,
+              height: 44,
+              borderRadius: 22,
               backgroundColor: "rgba(139,115,85,0.15)",
-              borderWidth: 1, borderColor: "#8B7355",
-              justifyContent: "center", alignItems: "center",
+              borderWidth: 1,
+              borderColor: "#8B7355",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
-            <Text style={{ color: "#8B7355", fontSize: 22, fontFamily: "ChusaLoveBold" }}>
+            <Text
+              style={{
+                color: "#8B7355",
+                fontSize: 22,
+                fontFamily: "ChusaLoveBold",
+              }}
+            >
               ✕
             </Text>
           </TouchableOpacity>
@@ -330,7 +344,8 @@ const DigitalGallery = ({ navigation }) => {
                 textAlign: "center",
               }}
             >
-              제작년도: {selectedArtwork.year} ・ 기법: {selectedArtwork.technique}
+              제작년도: {selectedArtwork.year} ・ 기법:{" "}
+              {selectedArtwork.technique}
             </Text>
           </View>
         </View>
@@ -338,5 +353,4 @@ const DigitalGallery = ({ navigation }) => {
     </View>
   );
 };
-
 export default DigitalGallery;

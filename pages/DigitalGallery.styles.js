@@ -40,7 +40,10 @@ export const styles = StyleSheet.create({
   // 지붕 배경
   roofBackground: {
     position: "absolute",
-    top: 0, left: 0, right: 0, bottom: 0,
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     width: "100%",
     height: "100%",
   },
@@ -57,7 +60,11 @@ export const styles = StyleSheet.create({
     zIndex: 10,
   },
   headerLeft: { flexDirection: "row", alignItems: "center", gap: width * 0.03 },
-  headerRight: { flexDirection: "row", alignItems: "center", gap: width * 0.02 },
+  headerRight: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: width * 0.02,
+  },
   backButton: {
     fontSize: Math.min(width * 0.06, 32),
     color: colors.white,
@@ -86,18 +93,21 @@ export const styles = StyleSheet.create({
     fontSize: Math.min(width * 0.015, 12),
     fontFamily: "ChusaLoveBold",
   },
-  userButton: { paddingHorizontal: width * 0.015, paddingVertical: height * 0.008 },
+  userButton: {
+    paddingHorizontal: width * 0.015,
+    paddingVertical: height * 0.008,
+  },
   userButtonText: {
     color: colors.white,
     fontSize: Math.min(width * 0.018, 14),
     fontFamily: "ChusaLoveBold",
   },
-
   // 제목/부제(배경 안, 더 위쪽에 배치)
   galleryTitleContainer: {
     position: "absolute",
     top: "36%", // 화면 비율 따라 상단에 위치
-    left: 0, right: 0,
+    left: 0,
+    right: 0,
     alignItems: "center",
     justifyContent: "center",
     zIndex: 10,
@@ -122,12 +132,10 @@ export const styles = StyleSheet.create({
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 2,
   },
-
   // ===== 작품 리스트 래퍼(상단 섹션 아래로 자동 배치) =====
   content: {
     flex: 1,
   },
-
   artworkContainer: {
     // topSection의 실측 높이를 paddingTop으로 전달해 겹치지 않도록 함
     paddingTop: 0, // 실제 값은 JS에서 동적으로 주입
@@ -139,7 +147,6 @@ export const styles = StyleSheet.create({
     paddingBottom: height * 0.05,
     alignItems: "center",
   },
-
   // ===== 카드 =====
   artworkCard: {
     marginHorizontal: width * 0.02,
@@ -147,14 +154,14 @@ export const styles = StyleSheet.create({
   },
   artworkFrame: {
     backgroundColor: "#F0F8FF",
-    padding: width * 0.004,     // 얇은 하늘색 여백
+    padding: width * 0.004, // 얇은 하늘색 여백
     borderRadius: 12,
     shadowColor: colors.galleryShadow,
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.3,
     shadowRadius: 6,
     elevation: 6,
-    borderWidth: 0.3,           // 테두리 더 얇게
+    borderWidth: 0.3, // 테두리 더 얇게
     borderColor: "#B3E5FF",
   },
   artworkImageContainer: {
@@ -168,7 +175,9 @@ export const styles = StyleSheet.create({
   artworkImage: { width: "100%", height: "100%", resizeMode: "cover" },
   artworkOverlay: {
     position: "absolute",
-    bottom: 0, left: 0, right: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
     backgroundColor: "rgba(0, 0, 0, 0.7)",
     padding: width * 0.01,
     borderBottomLeftRadius: 8,
@@ -186,7 +195,6 @@ export const styles = StyleSheet.create({
     fontFamily: "ChusaLoveBold",
     textAlign: "center",
   },
-
   // 푸터(필요시)
   footerSpace: { height: height * 0.05 },
 });

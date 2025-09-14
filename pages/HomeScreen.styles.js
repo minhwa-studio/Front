@@ -112,19 +112,6 @@ export const styles = StyleSheet.create({
     position: "relative",
     overflow: "hidden",
   },
-  backgroundImageContainer: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    width: "100%",
-    height: "100%",
-  },
-  backgroundImage: {
-    width: "100%",
-    height: "100%",
-  },
   backgroundOverlay: {
     position: "absolute",
     top: 0,
@@ -137,6 +124,7 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     maxWidth: width * 0.8,
     zIndex: 10,
+    position: "relative",
   },
   mainTitle: {
     fontSize: Math.min(width * 0.06, 48), // 0.045 → 0.06, 36 → 48로 증가
