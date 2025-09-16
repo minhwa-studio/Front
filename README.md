@@ -38,8 +38,8 @@
 **2-1. 민화 변환소**
 
 - 사용자의 사진 업로드 → 백엔드 서버 Request
-→ AI 모델 변환 처리(백엔드에서 연동) → 백엔드 Response
-→ 변환된 결과 이미지 출력 (저장/공유/전시 등록 버튼 제공)
+  - → AI 모델 변환 처리(백엔드에서 연동) → 백엔드 Response
+  - → 변환된 결과 이미지 출력 (저장/공유/전시 등록 버튼 제공)
 
 - 업로드 진행 표시(Progress), 실패 시 재시도, 네트워크 예외 처리
 
@@ -61,18 +61,18 @@
   
   - 전시 상세(썸네일, 캡션, 제작자, 좋아요/북마크 등)
 
-> 선택 기능(옵션): 좋아요/스크랩, 공유 링크, 전시관 커버 이미지/테마
+> 선택 기능: 좋아요, 공유 링크, 전시관 커버 이미지/테마
 
 
 
 ### 3) 기술 스택 & 아키텍처
 
-Framework: React Native
-Navigation: @react-navigation/native (Stack)
-데이터: zustand
-HTTP: axios (인터셉터로 토큰/에러 공통 처리)
-이미지: react-native-image-picker (갤러리/카메라), 캐싱/리사이즈 전략
-유틸: 환경변수(react-native-config)
+- Framework: React Native
+- Navigation: @react-navigation/native (Stack)
+- 데이터: zustand
+- HTTP: axios (인터셉터로 토큰/에러 공통 처리)
+- 이미지: react-native-image-picker (갤러리/카메라), 캐싱/리사이즈 전략
+- 유틸: 환경변수(react-native-config)
 
 ### 4. 빠른 시작 (Windows PowerShell)
 ```
