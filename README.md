@@ -5,11 +5,12 @@
 - 백엔드 연동: 변환 요청/전시 데이터 저장·조회(MongoDB)
 
 # 민화사진관 홈
-<img width="1907" height="792" alt="민화사진관 홈" src="https://github.com/user-attachments/assets/2dc0fab7-e8a7-4134-9d2d-23353c566f2e" />
+<img width="720" height="328" alt="민화사진관 홈" src="https://github.com/user-attachments/assets/2dc0fab7-e8a7-4134-9d2d-23353c566f2e" />
 # 민화 변환소
-<img width="1905" height="872" alt="민화변환소" src="https://github.com/user-attachments/assets/3c1cc6b3-9464-4501-a856-166fe9d2f46e" />
+<img width="720" height="328" alt="민화변환소" src="https://github.com/user-attachments/assets/3c1cc6b3-9464-4501-a856-166fe9d2f46e" />
 # 민화 전시관
-<img width="1905" height="872" alt="민화변환소" src="https://github.com/user-attachments/assets/749af464-57bc-4a57-81c4-a0773d5d4124" />
+<img width="720" height="328" alt="전시관" src="https://github.com/user-attachments/assets/2f42b5e1-4b38-4bc8-9eca-bc3cfbe1aa36" />
+
 
 
 ### 1) 개요
